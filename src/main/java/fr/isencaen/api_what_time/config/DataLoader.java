@@ -21,13 +21,17 @@ public class DataLoader implements ApplicationRunner {
         Event event1 = new Event();
         event1.setName("Event 1");
         event1.setDescription("Description for Event 1");
-        event1.setDate(LocalDateTime.of(2025, 11, 25, 18, 0));
+        event1.setStartDate(LocalDateTime.of(2025, 11, 25, 18, 0));
+        event1.setEndDate(LocalDateTime.of(2025, 11, 25, 20, 0));
+        event1.setVisibility(true);
         eventRepository.save(event1);
 
         Event event2 = new Event();
         event2.setName("Event 2");
         event2.setDescription("Description for Event 2");
-        event2.setDate("");
+        event2.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
+        event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
+        event2.setVisibility(false);
         eventRepository.save(event2);
     }
 }

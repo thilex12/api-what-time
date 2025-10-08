@@ -26,6 +26,16 @@ public class Event {
     public Event() {
     }
 
+    public Event(String name, String description, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+        this.name = name;
+        this.description = description;
+        this.creationDate = LocalDateTime.now();
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.visibility = visibility;
+    }
+
     public Event(String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
         this.name = name;
         this.description = description;
