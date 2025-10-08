@@ -13,6 +13,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int id_owner;
     private String name;
     private String description;
     private LocalDateTime creationDate;
@@ -26,7 +27,8 @@ public class Event {
     public Event() {
     }
 
-    public Event(String name, String description, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = LocalDateTime.now();
@@ -36,7 +38,8 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -46,8 +49,9 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(int id, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
         this.id = id;
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -115,6 +119,14 @@ public class Event {
 
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public int getId_owner() {
+        return id_owner;
+    }
+
+    public void setId_owner(int id_owner) {
+        this.id_owner = id_owner;
     }
 
     @Override

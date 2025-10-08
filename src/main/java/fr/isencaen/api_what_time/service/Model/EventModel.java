@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public record EventModel (
         int id,
+        int id_owner,
         String name,
         String description,
         LocalDateTime creationDate,
@@ -19,6 +20,7 @@ public record EventModel (
     public static EventModel of(Event event){
         return new EventModel(
                 event.getId(),
+                event.getId_owner(),
                 event.getName(),
                 event.getDescription(),
                 event.getCreationDate(),

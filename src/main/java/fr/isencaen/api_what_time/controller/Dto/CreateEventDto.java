@@ -6,6 +6,7 @@ import fr.isencaen.api_what_time.service.Model.EventModel;
 import java.time.LocalDateTime;
 
 public record CreateEventDto(
+        int id_owner,
         String name,
         String description,
         LocalDateTime creationDate,
@@ -17,6 +18,7 @@ public record CreateEventDto(
 ){
     public static CreateEventDto of(CreateEventModel event){
         return new CreateEventDto(
+                event.id_owner(),
                 event.name(),
                 event.description(),
                 event.creationDate(),

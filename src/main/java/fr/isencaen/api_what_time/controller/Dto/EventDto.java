@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public record EventDto (
         int id,
+        int id_owner,
         String name,
         String description,
         LocalDateTime creationDate,
@@ -18,6 +19,7 @@ public record EventDto (
     public static EventDto of(EventModel event){
         return new EventDto(
                 event.id(),
+                event.id_owner(),
                 event.name(),
                 event.description(),
                 event.creationDate(),
