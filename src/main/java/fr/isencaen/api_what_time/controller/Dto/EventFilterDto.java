@@ -1,5 +1,7 @@
 package fr.isencaen.api_what_time.controller.Dto;
 
+import fr.isencaen.api_what_time.repository.Entity.Tag;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -11,7 +13,8 @@ public record EventFilterDto (
         Optional<Integer> ownerId,
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
-        Optional<String> location
+        Optional<String> location,
+        Optional<Tag> tag
     ){
 
 }

@@ -39,7 +39,9 @@ public class EventService {
                 EventSpecification.findByName(eventFilterModel.name())
                         .and(EventSpecification.findByBeforeDate(eventFilterModel.beforeDate()))
                         .and(EventSpecification.findByAfterDate(eventFilterModel.afterDate()))
-                        .and(EventSpecification.findByLocation(eventFilterModel.location())),
+                        .and(EventSpecification.findByLocation(eventFilterModel.location()))
+                        .and(EventSpecification.findByTag(eventFilterModel.tag()))
+                        ,
                 pageable
         ).map(EventModel::of);
     }

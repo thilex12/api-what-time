@@ -1,6 +1,7 @@
 package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.controller.Dto.EventFilterDto;
+import fr.isencaen.api_what_time.repository.Entity.Tag;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -13,7 +14,8 @@ public record EventFilterModel(
         Optional<Integer> ownerId,
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
-        Optional<String> location
+        Optional<String> location,
+        Optional<Tag> tag
 ){
     public static EventFilterModel of(EventFilterDto eventFilterDto) {
         return new EventFilterModel(
@@ -24,7 +26,8 @@ public record EventFilterModel(
                 eventFilterDto.ownerId(),
                 eventFilterDto.beforeDate(),
                 eventFilterDto.afterDate(),
-                eventFilterDto.location()
+                eventFilterDto.location(),
+                eventFilterDto.tag()
         );
     }
 

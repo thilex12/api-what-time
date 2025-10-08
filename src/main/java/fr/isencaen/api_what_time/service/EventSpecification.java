@@ -1,6 +1,7 @@
 package fr.isencaen.api_what_time.service;
 
 import fr.isencaen.api_what_time.repository.Entity.Event;
+import fr.isencaen.api_what_time.repository.Entity.Tag;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,15 @@ public class EventSpecification {
             return (root, query, criteriaBuilder) -> null;
         }
     }
+
+    public static Specification<Event> findByTag(Optional<Tag> tag){
+        if (tag.isPresent()){
+            return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("tag").get("id")).value(tag.get().getId());
+        } else {
+            return (root, query, criteriaBuilder) -> null;
+        }
+    }
+
 
 
 
