@@ -18,7 +18,10 @@ public class Account {
     @OneToMany
     private List<Allow> allowedList;
     @OneToMany
-    private List<Inscription> inscriptionsList;
+    private List<Inscription> inscriptions;
+    @OneToMany
+    private List<Tag> tags;
+
 
     public Account(){}
     public Account(int id, String name, String surname, String mail, String pwd){
