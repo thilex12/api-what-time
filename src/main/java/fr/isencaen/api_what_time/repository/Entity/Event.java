@@ -2,6 +2,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -14,9 +15,9 @@ public class Event {
 
     private String name;
     private String description;
-    private String creationDate;
-    private String startDate;
-    private String endDate;
+    private LocalDateTime creationDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String location;
     private boolean visibility;
 
@@ -25,7 +26,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String name, String description, String creationDate, String startDate, String endDate, String location, boolean visibility) {
+    public Event(String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -35,7 +36,7 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(int id, String name, String description, String creationDate, String startDate, String endDate, String location, boolean visibility) {
+    public Event(int id, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -70,27 +71,27 @@ public class Event {
         this.description = description;
     }
 
-    public String getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

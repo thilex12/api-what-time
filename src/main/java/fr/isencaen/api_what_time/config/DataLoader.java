@@ -1,13 +1,33 @@
 package fr.isencaen.api_what_time.config;
 
+import fr.isencaen.api_what_time.repository.Entity.Event;
+import fr.isencaen.api_what_time.repository.EventRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
+@Component
 public class DataLoader implements ApplicationRunner {
 
+    @Autowired
+    EventRepository eventRepository;
 
-
+    @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        Event event1 = new Event();
+        event1.setName("Event 1");
+        event1.setDescription("Description for Event 1");
+        event1.setDate(LocalDateTime.of(2025, 11, 25, 18, 0));
+        eventRepository.save(event1);
+
+        Event event2 = new Event();
+        event2.setName("Event 2");
+        event2.setDescription("Description for Event 2");
+        event2.setDate("");
+        eventRepository.save(event2);
     }
 }
