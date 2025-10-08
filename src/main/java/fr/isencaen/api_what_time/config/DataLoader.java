@@ -1,10 +1,12 @@
 package fr.isencaen.api_what_time.config;
 
 import fr.isencaen.api_what_time.repository.Entity.Event;
+import fr.isencaen.api_what_time.repository.Entity.User;
 import fr.isencaen.api_what_time.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class DataLoader implements ApplicationRunner {
         event1.setVisibility(true);
         eventRepository.save(event1);
 
+
         Event event2 = new Event();
         event2.setName("Event 2");
         event2.setDescription("Description for Event 2");
@@ -33,5 +36,12 @@ public class DataLoader implements ApplicationRunner {
         event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
         event2.setVisibility(false);
         eventRepository.save(event2);
+
+
+        User user1 = new User();
+        user1.setName("John");
+        user1.setId(1);
+        user1.setPassword(new BCryptPasswordEncoder().encode("1234"));
+        user1.setRole("USER");
     }
 }
