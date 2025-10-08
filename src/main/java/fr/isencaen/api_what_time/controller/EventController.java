@@ -11,11 +11,11 @@ import fr.isencaen.api_what_time.service.Model.EventFilterModel;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.stream.EventFilter;
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -41,7 +41,6 @@ public class EventController {
     public EventDto createEvent(
             @RequestBody CreateEventDto createEventDto
     ) {
-
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
     }
 
