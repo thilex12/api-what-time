@@ -12,7 +12,8 @@ public record EventFilterModel(
         Optional<Boolean> visible,
         Optional<Integer> ownerId,
         Optional<LocalDateTime> beforeDate,
-        Optional<LocalDateTime> afterDate
+        Optional<LocalDateTime> afterDate,
+        Optional<String> location
 ){
     public static EventFilterModel of(EventFilterDto eventFilterDto) {
         return new EventFilterModel(
@@ -22,7 +23,8 @@ public record EventFilterModel(
                 eventFilterDto.visible(),
                 eventFilterDto.ownerId(),
                 eventFilterDto.beforeDate(),
-                eventFilterDto.afterDate()
+                eventFilterDto.afterDate(),
+                eventFilterDto.location()
         );
     }
 

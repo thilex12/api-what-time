@@ -2,6 +2,7 @@ package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.controller.Dto.CreateEventDto;
 import fr.isencaen.api_what_time.repository.Entity.Event;
+import fr.isencaen.api_what_time.repository.Entity.Location;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ public record CreateEventModel(
         LocalDateTime creationDate,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        int location,
+        Location location,
         boolean visibility
 
 ){

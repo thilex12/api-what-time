@@ -1,5 +1,6 @@
 package fr.isencaen.api_what_time.controller.Dto;
 
+import fr.isencaen.api_what_time.repository.Entity.Location;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventModel;
 
@@ -12,7 +13,7 @@ public record CreateEventDto(
         LocalDateTime creationDate,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        int location,
+        Location location,
         boolean visibility
 
 ){

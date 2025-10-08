@@ -10,7 +10,8 @@ public record EventFilterDto (
         Optional<Boolean> visible,
         Optional<Integer> ownerId,
         Optional<LocalDateTime> beforeDate,
-        Optional<LocalDateTime> afterDate
-){
+        Optional<LocalDateTime> afterDate,
+        Optional<String> location
+    ){
 
 }
