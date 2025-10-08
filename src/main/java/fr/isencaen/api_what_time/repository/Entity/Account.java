@@ -100,4 +100,20 @@ public class Account {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
+    }
+
+    public void addInscription(Inscription inscription) {
+        this.inscriptions.add(inscription);
+    }
+
+    public void removeInscription(Inscription inscription) {
+        this.inscriptions.remove(inscription);
+    }
 }
