@@ -18,7 +18,7 @@ public class EventController {
 
     @GetMapping("v1/events")
     public List<EventDto> getEvents() {
-        return eventService.getEvents();
+        return eventService.getEvents().stream().map(EventDto::of).toList();
     }
 
 }
