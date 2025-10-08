@@ -13,7 +13,7 @@ public class EventService {
     @Autowired
     EventRepository eventRepository;
 
-    public List<Event> findAll() {
+    public List<Event> getEvents() {
         return eventRepository.findAll();
     }
 
