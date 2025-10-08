@@ -50,12 +50,12 @@ public class EventService {
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
 
-         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
-//            user.account.getId();
-            Account user_account = user.getAccount();
-            int id_owner = user_account.getId();
-        }
+//         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+////            user.account.getId();
+//            Account user_account = user.getAccount();
+//            int id_owner = user_account.getId();
+//        }
 
         return EventModel.of(eventRepository.save(
                 new Event(
