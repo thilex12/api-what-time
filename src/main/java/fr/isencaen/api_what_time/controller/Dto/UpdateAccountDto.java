@@ -4,6 +4,6 @@ public record UpdateAccountDto(
         String name,
         String surname,
         String mail,
-        String mdp
+        String pwd
 ) {
 }
