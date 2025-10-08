@@ -11,26 +11,26 @@ public class Account {
     private String name;
     private String surname;
     private String mail;
-    private String mdp;
+    private String pwd;
 
     public Account(){}
-    public Account(int id, String name, String surname, String mail, String mdp){
+    public Account(int id, String name, String surname, String mail, String pwd){
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.mail = mail;
-        this.mdp = mdp;
+        this.pwd = pwd;
     }
-    public Account(String name, String surname, String mail, String mdp){
+    public Account(String name, String surname, String mail, String pwd){
         this.name = name;
         this.surname = surname;
         this.mail = mail;
-        this.mdp = mdp;
+        this.pwd = pwd;
     }
 
     public int getId(){return id;}
     public String getName(){return name;}
     public String getSurname(){return surname;}
     public String getMail(){return mail;}
-    public String getMdp(){return mdp;}
+    public String getPwd(){return pwd;}
 }

@@ -23,7 +23,8 @@ public class SpringSecurityConfig {
 
                     //                    auth.requestMatchers("/v1/accounts").hasRole("USER");
                     //auth.requestMatchers("/v1/accounts/test").permitAll();
-                    auth.requestMatchers("/v1/accounts").hasRole("USER");
+                    auth.requestMatchers("/v1/accounts").permitAll();
+                    auth.requestMatchers("/v1/accounts/me").hasRole("USER");
                     auth.anyRequest().authenticated();
                 }
         )
