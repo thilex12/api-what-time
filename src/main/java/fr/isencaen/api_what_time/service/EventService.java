@@ -50,16 +50,19 @@ public class EventService {
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
 
-//         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
-////            user.account.getId();
-//            Account user_account = user.getAccount();
-//            int id_owner = user_account.getId();
-//        }
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        }
+        else {
+            throw new RuntimeException("User not authenticated");
+        }
 
         return EventModel.of(eventRepository.save(
                 new Event(
-                        createEventModel.id_owner(),
+                        id_owner,
                         createEventModel.name(),
                         createEventModel.description(),
                         createEventModel.startDate(),
