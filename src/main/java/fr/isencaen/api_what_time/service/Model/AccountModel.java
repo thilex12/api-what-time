@@ -7,7 +7,7 @@ public record AccountModel (
         String name,
         String surname,
         String mail,
-        String mdp
+        String pwd
 ){
     public static AccountModel of(Account account){
         return new AccountModel(

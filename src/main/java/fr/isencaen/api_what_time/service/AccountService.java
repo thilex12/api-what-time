@@ -1,6 +1,5 @@
 package fr.isencaen.api_what_time.service;
 
-import fr.isencaen.api_what_time.controller.Dto.UpdateAccountDto;
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
@@ -41,7 +40,7 @@ public class AccountService {
 
     public AccountModel createAccount(CreateAccountModel createAccountModel){
         return AccountModel.of(
-                accountRepository.save(new Account(createAccountModel.name(), createAccountModel.surname(), createAccountModel.mail(), bCryptPasswordEncoder.encode(createAccountModel.mdp())))
+                accountRepository.save(new Account(createAccountModel.name(), createAccountModel.surname(), createAccountModel.mail(), bCryptPasswordEncoder.encode(createAccountModel.pwd())))
         );
     }
 
@@ -58,13 +57,13 @@ public class AccountService {
         name = updateAsked.name();
         surname = updateAsked.surname();
         mail = updateAsked.mail();
-        pwd = updateAsked.mdp();
+        pwd = updateAsked.pwd();
 
         // Si un champ est demandé à être modifié, on le modifie
         if (name != null && !name.isBlank()) bddAccount.setName(updateAsked.name());
         if (surname != null && !surname.isBlank()) bddAccount.setSurname(updateAsked.surname());
         if (mail != null && !mail.isBlank()) bddAccount.setMail(updateAsked.mail());
-        if (pwd != null && !pwd.isBlank()) bddAccount.setPwd(bCryptPasswordEncoder.encode(updateAsked.mdp()));
+        if (pwd != null && !pwd.isBlank()) bddAccount.setPwd(bCryptPasswordEncoder.encode(updateAsked.pwd()));
 
         return AccountModel.of(bddAccount);
     }

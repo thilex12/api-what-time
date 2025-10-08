@@ -6,9 +6,9 @@ public record UpdateAccountModel(
         String name,
         String surname,
         String mail,
-        String mdp
+        String pwd
 ) {
     public static UpdateAccountModel of(UpdateAccountDto account){
-        return new UpdateAccountModel(account.name(), account.surname(), account.mail(), account.mdp());
+        return new UpdateAccountModel(account.name(), account.surname(), account.mail(), account.pwd());
     }
 }
