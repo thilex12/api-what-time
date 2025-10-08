@@ -36,6 +36,12 @@ public class EventController {
         ).map(EventDto::of);
     }
 
+    @GetMapping("v1/events/{id}")
+    public EventDto getEventById(
+            @PathVariable int id
+    ) {
+        return EventDto.of(eventService.getEventById(id));
+    }
 
     @PostMapping("v1/events")
     @ResponseStatus(HttpStatus.CREATED)

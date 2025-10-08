@@ -46,6 +46,10 @@ public class EventService {
         ).map(EventModel::of);
     }
 
+    public EventModel getEventById(int id) {
+        return EventModel.of(eventRepository.findById(id).orElseThrow());
+    }
+
 
 
 
