@@ -64,12 +64,13 @@ public class DataLoader implements ApplicationRunner {
         event2.setVisibility(false);
         event2.setLocation(loc1);
         event2.setId_owner(1);
-        event2.setTagList(tagRepository.findAll());
+        event2.setTags(tagRepository.findAll());
         eventRepository.save(event2);
 
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
-        account.addTag(tag1);
+//        account.addTag(tag1);
+        account.setTags(tagRepository.findAll());
         accountRepository.save(account);
 
         Inscription inscription = new Inscription(account, event1);

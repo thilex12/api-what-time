@@ -15,11 +15,11 @@ public class Account {
     private String mail;
     private String pwd;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Allow> allowedList;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Inscription> inscriptions;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
 
@@ -101,19 +101,26 @@ public class Account {
         this.tags = tags;
     }
 
-    public void addTag(Tag tag) {
-        this.tags.add(tag);
-    }
+//    public void addTag(Tag tag) {
+//        if (this.tags == null) {
+//            this.tags = new ArrayList<>();
+//        }
+//        if (!this.tags.contains(tag)) {
+//            this.tags.add(tag);
+//        } else {
+//            this.tags.remove(tag);
+//        }
+//    }
 
-    public void removeTag(Tag tag) {
-        this.tags.remove(tag);
-    }
+//    public void removeTag(Tag tag) {
+//        this.tags.remove(tag);
+//    }
 
-    public void addInscription(Inscription inscription) {
-        this.inscriptions.add(inscription);
-    }
-
-    public void removeInscription(Inscription inscription) {
-        this.inscriptions.remove(inscription);
-    }
+//    public void addInscription(Inscription inscription) {
+//        this.inscriptions.add(inscription);
+//    }
+//
+//    public void removeInscription(Inscription inscription) {
+//        this.inscriptions.remove(inscription);
+//    }
 }

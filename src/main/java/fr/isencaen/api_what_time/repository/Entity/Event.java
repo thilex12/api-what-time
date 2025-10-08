@@ -27,13 +27,12 @@ public class Event {
 
     private boolean visibility;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Allow> allowedAccountsList;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Inscription> inscriptionsList;
-    @OneToMany
-    private List<Tag> tagList;
-
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Tag> tags;
 
 
     public Event() {
@@ -75,6 +74,10 @@ public class Event {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -141,10 +144,6 @@ public class Event {
         this.id_owner = id_owner;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public List<Allow> getAllowedAccountsList() {
         return allowedAccountsList;
     }
@@ -161,12 +160,12 @@ public class Event {
         this.inscriptionsList = inscriptionsList;
     }
 
-    public List<Tag> getTagList() {
-        return tagList;
+    public List<Tag> getTags() {
+        return tags;
     }
 
-    public void setTagList(List<Tag> tagList) {
-        this.tagList = tagList;
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
