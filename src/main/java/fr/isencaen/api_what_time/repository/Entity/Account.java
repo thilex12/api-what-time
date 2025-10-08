@@ -2,6 +2,8 @@ package fr.isencaen.api_what_time.repository.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="account")
 public class Account {
@@ -12,6 +14,11 @@ public class Account {
     private String surname;
     private String mail;
     private String pwd;
+
+    @OneToMany
+    private List<Allow> allowedList;
+    @OneToMany
+    private List<Inscription> inscriptionsList;
 
     public Account(){}
     public Account(int id, String name, String surname, String mail, String pwd){

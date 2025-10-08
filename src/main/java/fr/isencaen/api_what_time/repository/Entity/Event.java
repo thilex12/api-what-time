@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +26,11 @@ public class Event {
     private Location location;
 
     private boolean visibility;
+
+    @OneToMany
+    private List<Allow> allowedAccountsList;
+    @OneToMany
+    private List<Inscription> inscriptionsList;
 
 
 

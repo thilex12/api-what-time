@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -65,6 +66,7 @@ public class EventService {
                         id_owner,
                         createEventModel.name(),
                         createEventModel.description(),
+                        LocalDateTime.now(),
                         createEventModel.startDate(),
                         createEventModel.endDate(),
                         createEventModel.location(),

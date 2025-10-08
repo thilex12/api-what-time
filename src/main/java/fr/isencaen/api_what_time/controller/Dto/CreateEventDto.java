@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+@ValidEventDates
 public record CreateEventDto(
         int id_owner,
         @NotBlank(message = "Le nom doit etre renseigné")
@@ -17,16 +18,17 @@ public record CreateEventDto(
 
         LocalDateTime creationDate,
 
+        @NotBlank(message = "La date de début doit etre renseignée")
         @FutureOrPresent
-        @ValidEventDates
         LocalDateTime startDate,
+
+        @NotBlank(message = "La date de fin doit etre renseignée")
         @FutureOrPresent
-        @ValidEventDates
         LocalDateTime endDate,
 
         Location location,
 
-        @NotBlank
+        @NotBlank(message = "La visibilité doit etre renseignée")
         boolean visibility
 
 ){
