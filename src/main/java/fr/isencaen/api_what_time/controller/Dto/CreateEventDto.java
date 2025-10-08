@@ -12,7 +12,7 @@ public record CreateEventDto(
         LocalDateTime creationDate,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        String location,
+        int location,
         boolean visibility
 
 ){

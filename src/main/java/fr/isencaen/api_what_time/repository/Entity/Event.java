@@ -19,7 +19,11 @@ public class Event {
     private LocalDateTime creationDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     private boolean visibility;
 
 
@@ -27,7 +31,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id_owner = id_owner;
         this.name = name;
         this.description = description;
@@ -38,7 +42,7 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id_owner = id_owner;
         this.name = name;
         this.description = description;
@@ -49,7 +53,7 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id = id;
         this.id_owner = id_owner;
         this.name = name;
@@ -105,11 +109,11 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
