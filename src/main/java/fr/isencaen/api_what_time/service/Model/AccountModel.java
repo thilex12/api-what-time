@@ -11,7 +11,7 @@ public record AccountModel (
 ){
     public static AccountModel of(Account account){
         return new AccountModel(
-                account.getId(), account.getName(), account.getSurname(), account.getMail(), account.getMdp()
+                account.getId(), account.getName(), account.getSurname(), account.getMail(), account.getPwd()
         );
     }
 }
