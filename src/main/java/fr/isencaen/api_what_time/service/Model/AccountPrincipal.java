@@ -14,6 +14,10 @@ public class AccountPrincipal implements UserDetails {
         this.account = account;
     }
 
+    public Account getAccount(){
+        return account;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new Role("ROLE_USER"));
@@ -21,7 +25,7 @@ public class AccountPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return account.getMdp();
+        return account.getPwd();
     }
 
     @Override

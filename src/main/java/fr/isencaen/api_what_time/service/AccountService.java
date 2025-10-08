@@ -3,8 +3,11 @@ package fr.isencaen.api_what_time.service;
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
+import fr.isencaen.api_what_time.service.Model.AccountPrincipal;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,13 @@ public class AccountService {
 
     public AccountService(AccountRepository accountRepository){
         this.accountRepository = accountRepository;
+    }
+
+    public AccountModel getUserModel(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal)) return null;
+        AccountPrincipal user = (AccountPrincipal) auth.getPrincipal();
+        return AccountModel.of(user.getAccount());
     }
 
     public List<AccountModel> getAccountByEmail(String mail){
