@@ -2,7 +2,7 @@ package fr.isencaen.api_what_time.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import fr.isencaen.api_what_time.repository.entity.Notif;
+import fr.isencaen.api_what_time.repository.Entity.Notif;
 
 import java.util.List;
 

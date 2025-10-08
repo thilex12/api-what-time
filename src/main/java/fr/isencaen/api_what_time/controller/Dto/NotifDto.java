@@ -1,17 +1,18 @@
-package fr.isencaen.api_what_time.controller.dto;
+package fr.isencaen.api_what_time.controller.Dto;
 import java.time.LocalDateTime;
-import fr.isencaen.api_what_time.service.model.NotifModel;
+
+import fr.isencaen.api_what_time.service.Model.NotifModel;
 
 public record NotifDto(
         int idNotif,
         int idEvent,
-        LocalDateTime dateSend
+        boolean modify
 ){
     public static NotifDto of(NotifModel notifModel){
         return new NotifDto(
                 notifModel.idNotif(),
                 notifModel.idEvent(),
-                notifModel.dateSend()
+                notifModel.modify()
         );
     }
 }
