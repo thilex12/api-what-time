@@ -1,6 +1,8 @@
 package fr.isencaen.api_what_time.service;
 
 import fr.isencaen.api_what_time.repository.NotifRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import fr.isencaen.api_what_time.service.model.NotifModel;
 
@@ -14,8 +16,13 @@ public class NotifService {
         this.notifRepository = notifRepository;
     }
 
+
     public List<NotifModel> getNotif(){
-        return notifRepository.findAllByUserIdAndRead(userId, read)
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+
+        if (auth.isAuthenticated() && auth.getPrincipal())
+            return notifRepository.findAllByUserIdAndRead(auth.get, 0)
                 .stream().map(NotifModel::of).toList();
     }
 }
