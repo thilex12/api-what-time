@@ -18,8 +18,10 @@ public record CreateEventDto(
         LocalDateTime creationDate,
 
         @FutureOrPresent
+        @ValidEventDates
         LocalDateTime startDate,
         @FutureOrPresent
+        @ValidEventDates
         LocalDateTime endDate,
 
         Location location,

@@ -8,6 +8,7 @@ import fr.isencaen.api_what_time.repository.Entity.Event;
 import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
+import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class EventController {
     @PostMapping("v1/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
-            @RequestBody CreateEventDto createEventDto
+            @Valid @RequestBody CreateEventDto createEventDto
     ) {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
     }
