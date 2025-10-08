@@ -1,11 +1,7 @@
 package fr.isencaen.api_what_time.config;
 
-import fr.isencaen.api_what_time.repository.AccountRepository;
-import fr.isencaen.api_what_time.repository.Entity.Account;
-import fr.isencaen.api_what_time.repository.Entity.Event;
-import fr.isencaen.api_what_time.repository.Entity.Location;
-import fr.isencaen.api_what_time.repository.EventRepository;
-import fr.isencaen.api_what_time.repository.LocationRepository;
+import fr.isencaen.api_what_time.repository.*;
+import fr.isencaen.api_what_time.repository.Entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -27,6 +23,15 @@ public class DataLoader implements ApplicationRunner {
     AccountRepository accountRepository;
 
     @Autowired
+    TagRepository tagRepository;
+
+    @Autowired
+    AllowRepository allowRepository;
+
+    @Autowired
+    InscriptionRepository inscriptionRepository;
+
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -35,6 +40,10 @@ public class DataLoader implements ApplicationRunner {
         Location loc1 = new Location();
         loc1.setName("Salle1");
         locationRepository.save(loc1);
+
+        Tag tag1 = new Tag("Beebo");
+        tagRepository.save(tag1);
+
 
         Event event1 = new Event();
         event1.setName("Event 1");
@@ -59,5 +68,15 @@ public class DataLoader implements ApplicationRunner {
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
         accountRepository.save(account);
+
+        Inscription inscription = new Inscription(account, event1);
+        inscriptionRepository.save(inscription);
+
+        Inscription inscription2 = new Inscription(account, event2);
+        inscriptionRepository.save(inscription2);
+
+        Allow allow = new Allow(account, event2);
+        allowRepository.save(allow);
+
     }
 }

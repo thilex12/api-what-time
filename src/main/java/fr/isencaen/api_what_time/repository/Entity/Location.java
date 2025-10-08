@@ -91,4 +91,12 @@ public class Location {
     public int hashCode() {
         return Objects.hash(id, name, latitude, longitude, description);
     }
+
+    public List<Event> getEvent() {
+        return event;
+    }
+
+    public void setEvent(List<Event> event) {
+        this.event = event;
+    }
 }

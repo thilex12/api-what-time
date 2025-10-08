@@ -15,4 +15,30 @@ public class Inscription {
     @ManyToOne
     @JoinColumn(name = "id_event", referencedColumnName = "id")
     private Event event;
+
+    public Inscription() {
+    }
+
+    public Inscription(Account account, Event event) {
+        this.account = account;
+        this.event = event;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+
 }

@@ -31,6 +31,8 @@ public class Event {
     private List<Allow> allowedAccountsList;
     @OneToMany
     private List<Inscription> inscriptionsList;
+    @OneToMany
+    private List<Tag> tagList;
 
 
 
@@ -137,6 +139,34 @@ public class Event {
 
     public void setId_owner(int id_owner) {
         this.id_owner = id_owner;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Allow> getAllowedAccountsList() {
+        return allowedAccountsList;
+    }
+
+    public void setAllowedAccountsList(List<Allow> allowedAccountsList) {
+        this.allowedAccountsList = allowedAccountsList;
+    }
+
+    public List<Inscription> getInscriptionsList() {
+        return inscriptionsList;
+    }
+
+    public void setInscriptionsList(List<Inscription> inscriptionsList) {
+        this.inscriptionsList = inscriptionsList;
+    }
+
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 
     @Override
