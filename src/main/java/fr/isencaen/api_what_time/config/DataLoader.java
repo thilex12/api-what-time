@@ -1,7 +1,8 @@
 package fr.isencaen.api_what_time.config;
 
+import fr.isencaen.api_what_time.repository.AccountRepository;
+import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.repository.Entity.Event;
-import fr.isencaen.api_what_time.repository.Entity.User;
 import fr.isencaen.api_what_time.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -16,6 +17,11 @@ public class DataLoader implements ApplicationRunner {
 
     @Autowired
     EventRepository eventRepository;
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -38,10 +44,7 @@ public class DataLoader implements ApplicationRunner {
         eventRepository.save(event2);
 
 
-        User user1 = new User();
-        user1.setName("John");
-        user1.setId(1);
-        user1.setPassword(new BCryptPasswordEncoder().encode("1234"));
-        user1.setRole("USER");
+        Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
+        accountRepository.save(account);
     }
 }

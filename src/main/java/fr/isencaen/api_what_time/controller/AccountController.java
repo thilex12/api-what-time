@@ -23,20 +23,20 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("api/v1/accounts/me")
+    @GetMapping("v1/accounts/me")
     public AccountDto login(@RequestBody LoginAccountDto loginAccountDto){
         List<AccountModel> listModels = accountService.getAccountByEmail(loginAccountDto.mail());
         AccountModel user = listModels.getFirst();
         return AccountDto.of(user);
     }
 
-    @PostMapping("api/v1/accounts")
+    @PostMapping("v1/accounts")
     public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto){
         AccountModel user = accountService.createAccount(CreateAccountModel.of(registerAccountDto));
         return AccountDto.of(user);
     }
 
-    @GetMapping("api/v1/test")
+    @GetMapping("v1/accounts/test")
     public List<Integer> testRoad(){
         return List.of();
     }
