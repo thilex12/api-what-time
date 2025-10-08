@@ -19,14 +19,16 @@ public class SpringSecurityConfig {
         return http.authorizeHttpRequests(
                 auth -> {
                     auth.requestMatchers("/v1/events").permitAll();
-//                    auth.requestMatchers("/v1/accounts").hasRole("USER");
-                    auth.requestMatchers("/v1/accounts").hasAnyRole("USER", "ADMIN");
+                    //auth.requestMatchers("/v1/events").hasAnyRole("USER", "ADMIN");
+
+                    //                    auth.requestMatchers("/v1/accounts").hasRole("USER");
+                    //auth.requestMatchers("/v1/accounts/test").permitAll();
+                    auth.requestMatchers("/v1/accounts").hasRole("USER");
                     auth.anyRequest().authenticated();
                 }
         )
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults()).build();
-
     }
 
     @Bean
