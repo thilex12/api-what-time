@@ -4,6 +4,7 @@ import fr.isencaen.api_what_time.repository.Entity.Event;
 import fr.isencaen.api_what_time.repository.Entity.Location;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record EventModel (
         int id,
@@ -13,8 +14,9 @@ public record EventModel (
         LocalDateTime creationDate,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        Location location,
-        boolean visibility
+        LocationModel location,
+        boolean visibility,
+        List<TagModel> tagsList
 
 ){
 
@@ -27,8 +29,10 @@ public record EventModel (
                 event.getCreationDate(),
                 event.getStartDate(),
                 event.getEndDate(),
-                event.getLocation(),
-                event.isVisibility()
+                LocationModel.of(event.getLocation()),
+                event.isVisibility(),
+                event.getTagList().stream().map(TagModel::of).toList()
+//                event.getTagsList().stream().map(TagModel::of).toList()
         );
     }
 

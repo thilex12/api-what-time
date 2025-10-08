@@ -62,7 +62,9 @@ public class DataLoader implements ApplicationRunner {
         event2.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
         event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
         event2.setVisibility(false);
-        event1.setId_owner(1);
+        event2.setLocation(loc1);
+        event2.setId_owner(1);
+        event2.setTagList(tagRepository.findAll());
         eventRepository.save(event2);
 
 

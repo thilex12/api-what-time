@@ -1,9 +1,12 @@
 package fr.isencaen.api_what_time.repository.Entity;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 public class TagEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "id_tag", referencedColumnName = "id")
@@ -22,7 +25,7 @@ public class TagEvent {
         this.event = event;
     }
 
-    
+
 
     public Tag getTag() {
         return tag;

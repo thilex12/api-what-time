@@ -15,7 +15,7 @@ public record EventFilterModel(
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
         Optional<String> location,
-        Optional<Tag> tag
+        Optional<Tag> tag //FAIRE UN TAG MODEL
 ){
     public static EventFilterModel of(EventFilterDto eventFilterDto) {
         return new EventFilterModel(

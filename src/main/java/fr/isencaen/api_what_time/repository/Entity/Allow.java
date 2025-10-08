@@ -8,6 +8,9 @@ import java.util.List;
 @Table(name = "allow")
 public class Allow {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "id_account", referencedColumnName = "id")

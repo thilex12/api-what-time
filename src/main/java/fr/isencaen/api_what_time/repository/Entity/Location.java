@@ -18,7 +18,7 @@ public class Location {
     private double longitude;
     private String description;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Event> event;
 
     public Location() {
