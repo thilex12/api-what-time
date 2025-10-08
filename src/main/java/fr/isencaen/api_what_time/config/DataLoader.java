@@ -69,6 +69,7 @@ public class DataLoader implements ApplicationRunner {
 
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
+        account.addTag(tag1);
         accountRepository.save(account);
 
         Inscription inscription = new Inscription(account, event1);
