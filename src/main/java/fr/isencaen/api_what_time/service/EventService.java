@@ -8,6 +8,7 @@ import fr.isencaen.api_what_time.service.Model.EventModel;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class EventService {
     @Autowired
     EventRepository eventRepository;
 
-    public List<EventModel> getEvents(
+    public Page<EventModel> getEvents(
             Pageable pageable,
             EventFilterModel eventFilterModel
     ) {
@@ -34,7 +35,7 @@ public class EventService {
         return eventRepository.findAll(
                 EventSpecification.findByName(eventFilterModel.name()),
                 pageable
-        ).stream().map(EventModel::of).toList();
+        ).map(EventModel::of);
     }
 
 

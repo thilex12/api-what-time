@@ -10,6 +10,7 @@ import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +25,14 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping("v1/events")
-    public List<EventDto> getEvents(
+    public Page<EventDto> getEvents(
             @ParameterObject Pageable pageable,
             @ParameterObject EventFilterDto eventFilter
     ) {
         return eventService.getEvents(
                 pageable,
                 EventFilterModel.of(eventFilter)
-        ).stream().map(EventDto::of).toList();
+        ).map(EventDto::of);
     }
 
 
