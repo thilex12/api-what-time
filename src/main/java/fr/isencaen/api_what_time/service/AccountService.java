@@ -1,5 +1,6 @@
 package fr.isencaen.api_what_time.service;
 
+import fr.isencaen.api_what_time.controller.Dto.UpdateAccountDto;
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
@@ -8,6 +9,7 @@ import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,9 @@ import java.util.List;
 public class AccountService {
     @Autowired
     private final AccountRepository accountRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public AccountService(AccountRepository accountRepository){
         this.accountRepository = accountRepository;
@@ -34,7 +39,14 @@ public class AccountService {
 
     public AccountModel createAccount(CreateAccountModel createAccountModel){
         return AccountModel.of(
-                accountRepository.save(new Account(createAccountModel.name(), createAccountModel.surname(), createAccountModel.mail(), createAccountModel.mdp()))
+                accountRepository.save(new Account(createAccountModel.name(), createAccountModel.surname(), createAccountModel.mail(), bCryptPasswordEncoder.encode(createAccountModel.mdp())))
         );
     }
+
+    /*
+    public AccountModel modifyAccount(UpdateAccountDto updateAccountDto){
+        return AccountModel.of(
+                accountRepository.
+        )
+    }*/
 }
