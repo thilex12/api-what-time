@@ -10,6 +10,10 @@ import java.util.List;
 public class AccountPrincipal implements UserDetails {
     private Account account;
 
+    public AccountPrincipal(Account account) {
+        this.account = account;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new Role("ROLE_USER"));
