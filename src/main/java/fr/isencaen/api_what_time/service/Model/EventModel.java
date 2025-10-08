@@ -2,13 +2,15 @@ package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.repository.Entity.Event;
 
+import java.time.LocalDateTime;
+
 public record EventModel (
         int id,
         String name,
         String description,
-        String creationDate,
-        String startDate,
-        String endDate,
+        LocalDateTime creationDate,
+        LocalDateTime startDate,
+        LocalDateTime endDate,
         String location,
         boolean visibility
 
