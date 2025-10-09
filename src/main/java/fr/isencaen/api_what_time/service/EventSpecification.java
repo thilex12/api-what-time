@@ -53,25 +53,6 @@ public class EventSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("isArchived"));
     }
 
-//    public static Specification<Event> findByAllowedUser(Integer userId) {
-//        if (userId != null) {
-//            return (root, query, criteriaBuilder) -> criteriaBuilder.isMember(userId, root.get("allowedAccountsList"));
-//        } else {
-//            return (root, query, criteriaBuilder) -> null;
-//        }
-//    }
-
-
-//    public static Specification<Event> findByAllowedUserIfPrivate(Integer userId) {
-//        return (root, query, criteriaBuilder) -> criteriaBuilder.or(
-//                criteriaBuilder.isTrue(root.get("visibility")),
-//                criteriaBuilder.and(
-//                        criteriaBuilder.isFalse(root.get("visibility")),
-//                        criteriaBuilder.isMember(userId, root.get("allowedAccountsList"))
-//                )
-//        );
-//    }
-
 
     public static Specification<Event> canUserSeeEvent(int id_user) {
         return (root, query, criteriaBuilder) -> {
