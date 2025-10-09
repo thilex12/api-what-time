@@ -5,6 +5,7 @@ import fr.isencaen.api_what_time.controller.Dto.TagDto;
 import fr.isencaen.api_what_time.service.Model.CreateTagModel;
 import fr.isencaen.api_what_time.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +29,10 @@ public class TagController {
     }
 
     @PostMapping("v1/tags")
+    @ResponseStatus(HttpStatus.CREATED)
     public TagDto createTag(
             @RequestBody CreateTagDto tag
     ) {
-        return CreateTagDto.of(tagService.createTag(CreateTagModel.of(tag)));
+        return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
     }
 }

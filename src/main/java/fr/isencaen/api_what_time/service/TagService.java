@@ -1,8 +1,8 @@
 package fr.isencaen.api_what_time.service;
 
-import fr.isencaen.api_what_time.controller.Dto.CreateTagDto;
 import fr.isencaen.api_what_time.repository.Entity.Tag;
 import fr.isencaen.api_what_time.repository.TagRepository;
+import fr.isencaen.api_what_time.service.Model.CreateTagModel;
 import fr.isencaen.api_what_time.service.Model.TagModel;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +26,10 @@ public class TagService {
     }
 
     @Transactional
-    public TagModel createTag(CreateTagDto tagDto) {
+    public TagModel createTag(CreateTagModel tagModel) {
 //        Tag tag = new Tag(tagDto.name());
         return TagModel.of(tagRepository.save(
-                new Tag(tagDto.name())
+                new Tag(tagModel.name())
         ));
     }
 
