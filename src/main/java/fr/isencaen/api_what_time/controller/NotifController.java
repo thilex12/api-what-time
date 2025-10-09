@@ -16,8 +16,13 @@ public class NotifController {
     }
 
     @GetMapping("v1/notif")
-    public List<NotifDto> getAllNotif(){
+    public List<NotifDto> getAllNotifs(){
          return notifService.getAllNotifs().stream().map(NotifDto::of).toList();
+    }
+
+    @GetMapping("v1/notif/{idNotif}")
+    public NotifDto getNotif(@PathVariable int idNotif){
+        return NotifDto.of(notifService.getNotif(idNotif));
     }
 
 }

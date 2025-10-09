@@ -1,7 +1,9 @@
 package fr.isencaen.api_what_time.service;
 
+import fr.isencaen.api_what_time.repository.Entity.Notif;
 import fr.isencaen.api_what_time.repository.NotifRepository;
 import fr.isencaen.api_what_time.service.Model.AccountPrincipal;
+import fr.isencaen.api_what_time.service.Model.EventModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,5 +26,11 @@ public class NotifService {
         AccountPrincipal user = (AccountPrincipal) auth.getPrincipal();
             return notifRepository.findAllByAccountIdAndArchive(user.getAccount().getId(), false)
                 .stream().map(NotifModel::of).toList();
+    }
+
+    public NotifModel getNotif(int idNotif){
+        Notif notif = notifRepository.findById(idNotif).orElseThrow();
+        notif.setRead(true);
+        return NotifModel.of(notif);
     }
 }
