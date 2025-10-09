@@ -11,6 +11,7 @@ import fr.isencaen.api_what_time.service.Model.EventFilterModel;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @Cacheable(cacheNames = "events")
     @GetMapping("v1/events")
     public Page<EventDto> getEvents(
             @ParameterObject Pageable pageable,
@@ -36,6 +38,13 @@ public class EventController {
         ).map(EventDto::of);
     }
 
+    @Cacheable(cacheNames = "events")
+    @GetMapping("v1/events/{id}")
+    public EventDto getEventById(
+            @PathVariable int id
+    ) {
+        return EventDto.of(eventService.getEventById(id));
+    }
 
     @PostMapping("v1/events")
     @ResponseStatus(HttpStatus.CREATED)
