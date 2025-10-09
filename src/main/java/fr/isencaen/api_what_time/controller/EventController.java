@@ -47,7 +47,14 @@ public class EventController {
         ).map(EventDto::of);
     }
 
-
+    @Operation(summary = "Retourne un évenement par son ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Évenement retourné",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Évenement non trouvé",
+                    content = @Content),
+    })
+    @ResponseStatus(HttpStatus.FOUND)
     @GetMapping("v1/events/{id}")
     public EventDto getEventById(
             @PathVariable int id
