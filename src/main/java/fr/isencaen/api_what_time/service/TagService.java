@@ -1,6 +1,6 @@
 package fr.isencaen.api_what_time.service;
 
-import fr.isencaen.api_what_time.controller.Dto.TagDto;
+import fr.isencaen.api_what_time.controller.Dto.CreateTagDto;
 import fr.isencaen.api_what_time.repository.Entity.Tag;
 import fr.isencaen.api_what_time.repository.TagRepository;
 import fr.isencaen.api_what_time.service.Model.TagModel;
@@ -26,9 +26,11 @@ public class TagService {
     }
 
     @Transactional
-    public TagModel createTag(TagDto tagDto) {
-        Tag tag = new Tag(tagDto.name());
-        return TagModel.of(tagRepository.save(tag));
+    public TagModel createTag(CreateTagDto tagDto) {
+//        Tag tag = new Tag(tagDto.name());
+        return TagModel.of(tagRepository.save(
+                new Tag(tagDto.name())
+        ));
     }
 
 }
