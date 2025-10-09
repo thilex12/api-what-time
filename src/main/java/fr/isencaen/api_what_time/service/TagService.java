@@ -34,4 +34,11 @@ public class TagService {
         ));
     }
 
+    @Transactional
+    public TagModel updateTag(int id, CreateTagModel tagModel) {
+        Tag tag = tagRepository.findById(id).orElseThrow();
+        tag.setName(tagModel.name());
+        return TagModel.of(tag);
+    }
+
 }
