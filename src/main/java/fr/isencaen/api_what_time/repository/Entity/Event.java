@@ -20,6 +20,7 @@ public class Event {
     private LocalDateTime creationDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private boolean isArchived;
 
     @ManyToOne
     @JoinColumn(name = "location_id", referencedColumnName = "id")
@@ -59,6 +60,17 @@ public class Event {
         this.location = location;
         this.visibility = visibility;
     }
+//
+//    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
+//        this.id_owner = id_owner;
+//        this.name = name;
+//        this.description = description;
+//        this.creationDate = LocalDateTime.now();
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        this.location = location;
+//        this.visibility = visibility;
+//    }
 
     public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id = id;

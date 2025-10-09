@@ -1,11 +1,10 @@
 package fr.isencaen.api_what_time.controller.Dto;
 
-import fr.isencaen.api_what_time.repository.Entity.Tag;
-
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-public record EventFilterDto (
+public record EventFilterDto(
         Optional<String> name,
         Optional<LocalDateTime> startDate,
         Optional<LocalDateTime> endDate,
@@ -14,7 +13,7 @@ public record EventFilterDto (
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
         Optional<String> location,
-        Optional<Tag> tag
-    ){
+        List<Integer> tags
+) {
 
 }

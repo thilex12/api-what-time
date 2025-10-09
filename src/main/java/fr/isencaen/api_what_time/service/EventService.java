@@ -8,7 +8,6 @@ import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
 import fr.isencaen.api_what_time.service.Model.EventModel;
 import jakarta.transaction.Transactional;
-import org.h2.engine.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class EventService {
@@ -40,8 +38,8 @@ public class EventService {
                         .and(EventSpecification.findByBeforeDate(eventFilterModel.beforeDate()))
                         .and(EventSpecification.findByAfterDate(eventFilterModel.afterDate()))
                         .and(EventSpecification.findByLocation(eventFilterModel.location()))
-                        .and(EventSpecification.findByTag(eventFilterModel.tag()))
-                        ,
+                        .and(EventSpecification.findByTag(eventFilterModel.tags()))
+                ,
                 pageable
         ).map(EventModel::of);
     }
@@ -49,9 +47,6 @@ public class EventService {
     public EventModel getEventById(int id) {
         return EventModel.of(eventRepository.findById(id).orElseThrow());
     }
-
-
-
 
 
     @Transactional
@@ -62,8 +57,7 @@ public class EventService {
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
             Account user_account = user.getAccount();
             id_owner = user_account.getId();
-        }
-        else {
+        } else {
             throw new RuntimeException("User not authenticated");
         }
 
