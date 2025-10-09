@@ -16,6 +16,7 @@ public class TagService {
     @Autowired
     TagRepository tagRepository;
 
+
     public List<TagModel> getTags() {
         return tagRepository.findAll().stream().map(TagModel::of).toList();
     }
