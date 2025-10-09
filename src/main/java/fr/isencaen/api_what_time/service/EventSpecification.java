@@ -1,5 +1,6 @@
 package fr.isencaen.api_what_time.service;
 
+import fr.isencaen.api_what_time.repository.Entity.Allow;
 import fr.isencaen.api_what_time.repository.Entity.Event;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -51,5 +52,44 @@ public class EventSpecification {
     public static Specification<Event> findByIsArchivedFalse() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("isArchived"));
     }
-    
+
+//    public static Specification<Event> findByAllowedUser(Integer userId) {
+//        if (userId != null) {
+//            return (root, query, criteriaBuilder) -> criteriaBuilder.isMember(userId, root.get("allowedAccountsList"));
+//        } else {
+//            return (root, query, criteriaBuilder) -> null;
+//        }
+//    }
+
+
+//    public static Specification<Event> findByAllowedUserIfPrivate(Integer userId) {
+//        return (root, query, criteriaBuilder) -> criteriaBuilder.or(
+//                criteriaBuilder.isTrue(root.get("visibility")),
+//                criteriaBuilder.and(
+//                        criteriaBuilder.isFalse(root.get("visibility")),
+//                        criteriaBuilder.isMember(userId, root.get("allowedAccountsList"))
+//                )
+//        );
+//    }
+
+
+    public static Specification<Event> canUserSeeEvent(int id_user) {
+        return (root, query, criteriaBuilder) -> {
+            var subquery = query.subquery(Long.class);
+            var allowRoot = subquery.from(Allow.class);
+            subquery.select(allowRoot.get("id"))
+                    .where(
+                            criteriaBuilder.equal(allowRoot.get("event").get("id"), root.get("id")),
+                            criteriaBuilder.equal(allowRoot.get("account").get("id"), id_user)
+                    );
+            return criteriaBuilder.or(
+                    criteriaBuilder.isTrue(root.get("visibility")),
+                    criteriaBuilder.and(
+                            criteriaBuilder.isFalse(root.get("visibility")),
+                            criteriaBuilder.exists(subquery)
+                    )
+            );
+        };
+    }
+
 }

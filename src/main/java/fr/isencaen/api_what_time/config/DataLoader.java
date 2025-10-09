@@ -50,9 +50,10 @@ public class DataLoader implements ApplicationRunner {
         event1.setDescription("Description for Event 1");
         event1.setStartDate(LocalDateTime.of(2025, 11, 25, 18, 0));
         event1.setEndDate(LocalDateTime.of(2025, 11, 25, 20, 0));
-        event1.setVisibility(true);
+        event1.setVisibility(false);
         event1.setLocation(loc1);
         event1.setId_owner(1);
+//        event1.setAllowedAccountsList(allowEvent1);
         eventRepository.save(event1);
 
 
@@ -63,8 +64,10 @@ public class DataLoader implements ApplicationRunner {
         event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
         event2.setVisibility(false);
         event2.setLocation(loc1);
-        event2.setId_owner(1);
+        event2.setId_owner(2);
         event2.setTags(tagRepository.findAll());
+
+//        event2.setAllowedAccountsList(allowRepository.findAll());
         eventRepository.save(event2);
 
         Event event3 = new Event();
@@ -91,8 +94,12 @@ public class DataLoader implements ApplicationRunner {
         Inscription inscription2 = new Inscription(account, event2);
         inscriptionRepository.save(inscription2);
 
-        Allow allow = new Allow(account, event2);
-        allowRepository.save(allow);
+//        Allow allow = new Allow(account, event2);
+//        allowRepository.save(allow);
+
+        // Ajout de user1 (account) dans la allowlist de event1
+        Allow allowEvent1 = new Allow(account, event1);
+        allowRepository.save(allowEvent1);
 
     }
 }

@@ -30,9 +30,9 @@ public class Event {
     private boolean visibility;
     private boolean isArchived;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<Allow> allowedAccountsList;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<Inscription> inscriptionsList;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Tag> tags;

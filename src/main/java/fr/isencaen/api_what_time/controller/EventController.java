@@ -88,4 +88,13 @@ public class EventController {
         return EventDto.of(eventService.updateEvent(id, UpdateEventModel.of(updateEventDto)));
     }
 
+    @PostMapping("v1/events/{eventId}/allow/{accountId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addAccountToAllowedList(
+            @PathVariable int eventId,
+            @PathVariable int accountId
+    ) {
+        eventService.addAccountToAllowedList(eventId, accountId);
+    }
+
 }

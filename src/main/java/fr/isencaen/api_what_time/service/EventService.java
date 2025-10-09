@@ -1,6 +1,9 @@
 package fr.isencaen.api_what_time.service;
 
+import fr.isencaen.api_what_time.repository.AccountRepository;
+import fr.isencaen.api_what_time.repository.AllowRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
+import fr.isencaen.api_what_time.repository.Entity.Allow;
 import fr.isencaen.api_what_time.repository.Entity.Event;
 import fr.isencaen.api_what_time.repository.EventRepository;
 import fr.isencaen.api_what_time.service.Model.*;
@@ -21,6 +24,10 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+    @Autowired
+    AllowRepository allowRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
 //    @Cacheable(cacheNames = "events")
 //    @Transactional
@@ -38,6 +45,15 @@ public class EventService {
 //            user.getUsername();
 //        }
 
+        int id_user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_user = user_account.getId();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+
         return eventRepository.findAll(
                 EventSpecification.findByName(eventFilterModel.name())
                         .and(EventSpecification.findByBeforeDate(eventFilterModel.beforeDate()))
@@ -45,6 +61,7 @@ public class EventService {
                         .and(EventSpecification.findByLocation(eventFilterModel.location()))
                         .and(EventSpecification.findByTag(eventFilterModel.tags()))
                         .and(EventSpecification.findByIsArchivedFalse())
+                        .and(EventSpecification.canUserSeeEvent(id_user))
                 ,
                 pageable
         ).map(EventModel::of);
@@ -112,6 +129,17 @@ public class EventService {
         event.setLocation(updateEventModel.location());
         event.setVisibility(updateEventModel.visibility());
         return EventModel.of(event);
+    }
+
+    @Transactional
+    public void addAccountToAllowedList(int eventId, int accountId) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        var account = accountRepository.findById(accountId).orElseThrow();
+        Allow allow = new Allow(account, event);
+        allowRepository.save(allow);
+        // Optionnel : ajouter à la liste de l'événement si nécessaire
+        event.getAllowedAccountsList().add(allow);
+        eventRepository.save(event);
     }
 
 
