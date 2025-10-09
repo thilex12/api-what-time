@@ -2,9 +2,11 @@ package fr.isencaen.api_what_time.controller;
 
 import fr.isencaen.api_what_time.controller.Dto.AccountDto;
 import fr.isencaen.api_what_time.controller.Dto.RegisterAccountDto;
+import fr.isencaen.api_what_time.controller.Dto.UpdateAccountDto;
 import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
+import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +32,11 @@ public class AccountController {
         return AccountDto.of(user);
     }
 
-    /*
     @PutMapping("v1/accounts/me")
-    public AccountDto update(@RequestBody RegisterAccountDto registerAccountDto){
-        AccountModel user = accountService.createAccount(CreateAccountModel.of(registerAccountDto));
+    public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto){
+        AccountModel user = accountService.updateAccount(UpdateAccountModel.of(updateAccountDto));
         return AccountDto.of(user);
-    }*/
+    }
 
     // Uniquement pour débug
     @GetMapping("v1/accounts/test")

@@ -2,6 +2,8 @@ package fr.isencaen.api_what_time.repository.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tag")
 public class Tag {
@@ -10,6 +12,13 @@ public class Tag {
     private int id;
 
     private String name;
+
+    @OneToMany
+    private List<Event> events;
+
+    @OneToMany
+    private List<Account> accounts;
+
 
     public Tag() {
     }
@@ -27,11 +36,31 @@ public class Tag {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

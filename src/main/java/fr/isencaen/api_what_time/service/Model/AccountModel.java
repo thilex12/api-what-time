@@ -2,16 +2,26 @@ package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.repository.Entity.Account;
 
-public record AccountModel (
+import java.util.List;
+
+public record AccountModel(
         int id,
         String name,
         String surname,
         String mail,
-        String mdp
-){
-    public static AccountModel of(Account account){
+        String pwd,
+        List<TagModel> tags,
+        List<InscriptionModel> inscriptions
+) {
+    public static AccountModel of(Account account) {
         return new AccountModel(
-                account.getId(), account.getName(), account.getSurname(), account.getMail(), account.getPwd()
+                account.getId(),
+                account.getName(),
+                account.getSurname(),
+                account.getMail(),
+                account.getPwd(),
+                account.getTags().stream().map(TagModel::of).toList(),
+                account.getInscriptions().stream().map(InscriptionModel::of).toList()
         );
     }
 }

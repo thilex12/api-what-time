@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,20 +14,32 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int id_owner;
     private String name;
     private String description;
     private LocalDateTime creationDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     private boolean visibility;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Allow> allowedAccountsList;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Inscription> inscriptionsList;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Tag> tags;
 
 
     public Event() {
     }
 
-    public Event(String name, String description, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = LocalDateTime.now();
@@ -36,7 +49,8 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -46,8 +60,9 @@ public class Event {
         this.visibility = visibility;
     }
 
-    public Event(int id, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, String location, boolean visibility) {
+    public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id = id;
+        this.id_owner = id_owner;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -59,6 +74,10 @@ public class Event {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -101,11 +120,11 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -115,6 +134,38 @@ public class Event {
 
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public int getId_owner() {
+        return id_owner;
+    }
+
+    public void setId_owner(int id_owner) {
+        this.id_owner = id_owner;
+    }
+
+    public List<Allow> getAllowedAccountsList() {
+        return allowedAccountsList;
+    }
+
+    public void setAllowedAccountsList(List<Allow> allowedAccountsList) {
+        this.allowedAccountsList = allowedAccountsList;
+    }
+
+    public List<Inscription> getInscriptionsList() {
+        return inscriptionsList;
+    }
+
+    public void setInscriptionsList(List<Inscription> inscriptionsList) {
+        this.inscriptionsList = inscriptionsList;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
