@@ -17,6 +17,9 @@ public class DataLoader implements ApplicationRunner {
     EventRepository eventRepository;
 
     @Autowired
+    NotifRepository notifRepository;
+
+    @Autowired
     LocationRepository locationRepository;
 
     @Autowired
@@ -87,6 +90,15 @@ public class DataLoader implements ApplicationRunner {
 //        account.addTag(tag1);
         account.setTags(tagRepository.findAll());
         accountRepository.save(account);
+
+        Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
+        notifRepository.save(notif1);
+
+        Notif notif2 = new Notif(event2, 1, LocalDateTime.now(), false, false, account);
+        notifRepository.save(notif2);
+
+        Notif notif3 = new Notif(event1, 2, LocalDateTime.now(), false, false, account);
+        notifRepository.save(notif3);
 
         Inscription inscription = new Inscription(account, event1);
         inscriptionRepository.save(inscription);
