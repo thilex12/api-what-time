@@ -20,13 +20,15 @@ public class Event {
     private LocalDateTime creationDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private boolean isArchived;
+
 
     @ManyToOne
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
+
     private boolean visibility;
+    private boolean isArchived;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Allow> allowedAccountsList;
@@ -60,17 +62,18 @@ public class Event {
         this.location = location;
         this.visibility = visibility;
     }
-//
-//    public Event(int id_owner, String name, String description, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
-//        this.id_owner = id_owner;
-//        this.name = name;
-//        this.description = description;
-//        this.creationDate = LocalDateTime.now();
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//        this.location = location;
-//        this.visibility = visibility;
-//    }
+
+    public Event(int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility, boolean isArchived) {
+        this.id_owner = id_owner;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.visibility = visibility;
+        this.isArchived = isArchived;
+    }
 
     public Event(int id, int id_owner, String name, String description, LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime endDate, Location location, boolean visibility) {
         this.id = id;
@@ -178,6 +181,14 @@ public class Event {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
     }
 
     @Override

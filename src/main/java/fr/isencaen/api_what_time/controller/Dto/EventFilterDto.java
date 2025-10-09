@@ -13,7 +13,8 @@ public record EventFilterDto(
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
         Optional<String> location,
-        List<Integer> tags
+        List<Integer> tags,
+        Boolean isArchived
 ) {
 
 }

@@ -4,7 +4,6 @@ package fr.isencaen.api_what_time.controller;
 import fr.isencaen.api_what_time.controller.Dto.CreateEventDto;
 import fr.isencaen.api_what_time.controller.Dto.EventDto;
 import fr.isencaen.api_what_time.controller.Dto.EventFilterDto;
-import fr.isencaen.api_what_time.repository.Entity.Event;
 import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
@@ -16,9 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.stream.EventFilter;
-import java.util.List;
 
 @RestController
 public class EventController {
@@ -54,4 +50,11 @@ public class EventController {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
     }
 
+    @DeleteMapping("v1/events/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(
+            @PathVariable int id
+    ) {
+        eventService.deleteEvent(id);
+    }
 }

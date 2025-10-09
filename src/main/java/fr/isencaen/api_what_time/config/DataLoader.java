@@ -67,6 +67,18 @@ public class DataLoader implements ApplicationRunner {
         event2.setTags(tagRepository.findAll());
         eventRepository.save(event2);
 
+        Event event3 = new Event();
+        event3.setName("Event 3");
+        event3.setDescription("Description for Event 2");
+        event3.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
+        event3.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
+        event3.setVisibility(true);
+        event3.setLocation(loc1);
+        event3.setId_owner(1);
+        event3.setArchived(true);
+//        event3.setTags(tagRepository.findAll());
+        eventRepository.save(event3);
+
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);

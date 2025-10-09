@@ -15,7 +15,8 @@ public record EventFilterModel(
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
         Optional<String> location,
-        List<Integer> tags //FAIRE UN TAG MODEL
+        List<Integer> tags,
+        Boolean isArchived
 ) {
     public static EventFilterModel of(EventFilterDto eventFilterDto) {
         return new EventFilterModel(
@@ -27,7 +28,8 @@ public record EventFilterModel(
                 eventFilterDto.beforeDate(),
                 eventFilterDto.afterDate(),
                 eventFilterDto.location(),
-                eventFilterDto.tags()
+                eventFilterDto.tags(),
+                eventFilterDto.isArchived()
         );
     }
 

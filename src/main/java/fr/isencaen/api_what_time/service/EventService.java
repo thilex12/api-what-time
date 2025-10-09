@@ -39,6 +39,7 @@ public class EventService {
                         .and(EventSpecification.findByAfterDate(eventFilterModel.afterDate()))
                         .and(EventSpecification.findByLocation(eventFilterModel.location()))
                         .and(EventSpecification.findByTag(eventFilterModel.tags()))
+                        .and(EventSpecification.findByIsArchivedFalse())
                 ,
                 pageable
         ).map(EventModel::of);
@@ -70,10 +71,17 @@ public class EventService {
                         createEventModel.startDate(),
                         createEventModel.endDate(),
                         createEventModel.location(),
-                        createEventModel.visibility()
+                        createEventModel.visibility(),
+                        false
 
                 )
         ));
+    }
+
+    @Transactional
+    public void deleteEvent(int id) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        event.setArchived(true);
     }
 
 

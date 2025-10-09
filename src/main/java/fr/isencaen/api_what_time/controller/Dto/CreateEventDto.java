@@ -2,7 +2,6 @@ package fr.isencaen.api_what_time.controller.Dto;
 
 import fr.isencaen.api_what_time.repository.Entity.Location;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
-import fr.isencaen.api_what_time.service.Model.EventModel;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 
@@ -29,10 +28,13 @@ public record CreateEventDto(
         Location location,
 
         @NotBlank(message = "La visibilité doit etre renseignée")
-        boolean visibility
+        boolean visibility,
 
-){
-    public static CreateEventDto of(CreateEventModel event){
+
+        boolean isArchived
+
+) {
+    public static CreateEventDto of(CreateEventModel event) {
         return new CreateEventDto(
                 event.id_owner(),
                 event.name(),
@@ -41,7 +43,8 @@ public record CreateEventDto(
                 event.startDate(),
                 event.endDate(),
                 event.location(),
-                event.visibility()
+                event.visibility(),
+                event.isArchived()
 
         );
     }
