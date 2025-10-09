@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface NotifRepository extends JpaRepository<Notif, Integer>{
-    List<Notif> findAllByUserIdAndRead(int idUser, boolean read);
+    List<Notif> findAllByAccountIdAndArchive(int idUser, boolean archive);
 }

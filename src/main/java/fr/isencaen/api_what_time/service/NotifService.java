@@ -18,11 +18,11 @@ public class NotifService {
     }
 
 
-    public List<NotifModel> getNotif(){
+    public List<NotifModel> getAllNotifs(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal)) return null;
         AccountPrincipal user = (AccountPrincipal) auth.getPrincipal();
-            return notifRepository.findAllByUserIdAndRead(user.getAccount().getId(), false)
+            return notifRepository.findAllByAccountIdAndArchive(user.getAccount().getId(), false)
                 .stream().map(NotifModel::of).toList();
     }
 }
