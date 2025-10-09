@@ -1,7 +1,7 @@
 package fr.isencaen.api_what_time.controller.Dto;
 
 import fr.isencaen.api_what_time.repository.Entity.Location;
-import fr.isencaen.api_what_time.service.Model.CreateEventModel;
+import fr.isencaen.api_what_time.service.Model.UpdateEventModel;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,46 +9,36 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @ValidEventDates
-public record CreateEventDto(
-        int id_owner,
+public record UpdateEventDto(
+
         @NotBlank(message = "Le nom doit etre renseigné")
         String name,
 
         String description,
 
-        LocalDateTime creationDate,
-
-        @NotNull(message = "La date de début doit etre renseignée")
+        @NotNull
         @FutureOrPresent
         LocalDateTime startDate,
 
-        @NotNull(message = "La date de fin doit etre renseignée")
+        @NotNull
         @FutureOrPresent
         LocalDateTime endDate,
 
         Location location,
 
-        @NotBlank(message = "La visibilité doit etre renseignée")
-        boolean visibility,
+        @NotNull(message = "La visibilité doit etre renseignée")
+        boolean visibility
 
-
-        boolean isArchived
 
 ) {
-    public static CreateEventDto of(CreateEventModel event) {
-        return new CreateEventDto(
-                event.id_owner(),
+    public static UpdateEventDto of(UpdateEventModel event) {
+        return new UpdateEventDto(
                 event.name(),
                 event.description(),
-                event.creationDate(),
                 event.startDate(),
                 event.endDate(),
                 event.location(),
-                event.visibility(),
-                event.isArchived()
-
+                event.visibility()
         );
     }
-
-
 }

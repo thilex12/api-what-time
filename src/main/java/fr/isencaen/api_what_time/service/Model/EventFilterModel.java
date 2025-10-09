@@ -1,9 +1,9 @@
 package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.controller.Dto.EventFilterDto;
-import fr.isencaen.api_what_time.repository.Entity.Tag;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public record EventFilterModel(
@@ -15,8 +15,9 @@ public record EventFilterModel(
         Optional<LocalDateTime> beforeDate,
         Optional<LocalDateTime> afterDate,
         Optional<String> location,
-        Optional<Tag> tag //FAIRE UN TAG MODEL
-){
+        List<Integer> tags,
+        Boolean isArchived
+) {
     public static EventFilterModel of(EventFilterDto eventFilterDto) {
         return new EventFilterModel(
                 eventFilterDto.name(),
@@ -27,7 +28,8 @@ public record EventFilterModel(
                 eventFilterDto.beforeDate(),
                 eventFilterDto.afterDate(),
                 eventFilterDto.location(),
-                eventFilterDto.tag()
+                eventFilterDto.tags(),
+                eventFilterDto.isArchived()
         );
     }
 
