@@ -3,12 +3,11 @@ package fr.isencaen.api_what_time.service;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.repository.Entity.Event;
 import fr.isencaen.api_what_time.repository.EventRepository;
-import fr.isencaen.api_what_time.service.Model.AccountPrincipal;
-import fr.isencaen.api_what_time.service.Model.CreateEventModel;
-import fr.isencaen.api_what_time.service.Model.EventFilterModel;
-import fr.isencaen.api_what_time.service.Model.EventModel;
+import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,12 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+
+//    @Cacheable(cacheNames = "events")
+//    @Transactional
+//    public Event getEventById(int id) {
+//        return EventModel.of(eventRepository.findById(id).orElseThrow());
+//    }
 
     public Page<EventModel> getEvents(
             Pageable pageable,
@@ -45,10 +50,11 @@ public class EventService {
         ).map(EventModel::of);
     }
 
+    @Cacheable(cacheNames = "events")
+    @Transactional
     public EventModel getEventById(int id) {
         return EventModel.of(eventRepository.findById(id).orElseThrow());
     }
-
 
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
@@ -78,10 +84,34 @@ public class EventService {
         ));
     }
 
+    @CacheEvict(cacheNames = "events")
     @Transactional
     public void deleteEvent(int id) {
         Event event = eventRepository.findById(id).orElseThrow();
         event.setArchived(true);
+    }
+
+    @Transactional
+    public EventModel updateEvent(int id, UpdateEventModel updateEventModel) {
+
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+
+
+        Event event = eventRepository.findById(id).orElseThrow();
+        event.setName(updateEventModel.name());
+        event.setDescription(updateEventModel.description());
+        event.setStartDate(updateEventModel.startDate());
+        event.setEndDate(updateEventModel.endDate());
+        event.setLocation(updateEventModel.location());
+        event.setVisibility(updateEventModel.visibility());
+        return EventModel.of(event);
     }
 
 
