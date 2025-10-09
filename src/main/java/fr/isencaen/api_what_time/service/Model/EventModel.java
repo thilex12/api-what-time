@@ -1,12 +1,11 @@
 package fr.isencaen.api_what_time.service.Model;
 
 import fr.isencaen.api_what_time.repository.Entity.Event;
-import fr.isencaen.api_what_time.repository.Entity.Location;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record EventModel (
+public record EventModel(
         int id,
         int id_owner,
         String name,
@@ -18,9 +17,9 @@ public record EventModel (
         boolean visibility,
         List<TagModel> tagsList
 
-){
+) {
 
-    public static EventModel of(Event event){
+    public static EventModel of(Event event) {
         return new EventModel(
                 event.getId(),
                 event.getId_owner(),
@@ -31,7 +30,7 @@ public record EventModel (
                 event.getEndDate(),
                 LocationModel.of(event.getLocation()),
                 event.isVisibility(),
-                event.getTagList().stream().map(TagModel::of).toList()
+                event.getTags().stream().map(TagModel::of).toList()
 //                event.getTagsList().stream().map(TagModel::of).toList()
         );
     }
