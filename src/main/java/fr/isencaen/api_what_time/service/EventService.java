@@ -39,12 +39,6 @@ public class EventService {
             Pageable pageable,
             EventFilterModel eventFilterModel
     ) {
-
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth.isAuthenticated() && auth.getPrincipal() instanceof User user) {
-//            user.getUsername();
-//        }
-
         int id_user;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
@@ -137,7 +131,6 @@ public class EventService {
         var account = accountRepository.findById(accountId).orElseThrow();
         Allow allow = new Allow(account, event);
         allowRepository.save(allow);
-        // Optionnel : ajouter à la liste de l'événement si nécessaire
         event.getAllowedAccountsList().add(allow);
         eventRepository.save(event);
     }

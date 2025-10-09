@@ -41,7 +41,6 @@ public class TagController {
             @PathVariable int id,
             @RequestBody CreateTagDto tag
     ) {
-        // For the sake of example, let's assume the TagService has an updateTag method
         return TagDto.of(tagService.updateTag(id, CreateTagModel.of(tag)));
     }
 }
