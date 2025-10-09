@@ -16,6 +16,9 @@ public class Tag {
     @OneToMany
     private List<Event> events;
 
+    @OneToMany
+    private List<Account> accounts;
+
 
     public Tag() {
     }
@@ -33,6 +36,10 @@ public class Tag {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -41,15 +48,19 @@ public class Tag {
         this.name = name;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public List<Event> getEvents() {
         return events;
     }
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }
