@@ -9,6 +9,11 @@ import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
 import fr.isencaen.api_what_time.service.Model.UpdateEventModel;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,13 @@ public class EventController {
     private EventService eventService;
 
 
+    @Operation(summary = "Retounre la liste des évenements", description = "Permet de filtrer les évenements par nom, date, lieu et tag")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des évenements retournée",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Requête invalide",
+                    content = @Content),
+    })
     @GetMapping("v1/events")
     public Page<EventDto> getEvents(
             @ParameterObject Pageable pageable,
@@ -53,7 +65,7 @@ public class EventController {
 
 
     @DeleteMapping("v1/events/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @ResponseStatus(HttpStatus.)
     public void deleteEvent(
             @PathVariable int id
     ) {
@@ -61,6 +73,7 @@ public class EventController {
     }
 
     @PutMapping("v1/events/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateEvent(
             @PathVariable int id,
             @Valid @RequestBody UpdateEventDto updateEventDto

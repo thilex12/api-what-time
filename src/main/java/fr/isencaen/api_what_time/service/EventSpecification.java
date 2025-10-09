@@ -50,16 +50,6 @@ public class EventSpecification {
 
     public static Specification<Event> findByIsArchivedFalse() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("isArchived"));
-//        if (!tags.isEmpty()) {
-//            return (root, query, criteriaBuilder) -> root.get("tags").get("id").in(tags);
-//        } else {
-//            return (root, query, criteriaBuilder) -> null;
-//        }
     }
-
-
-//    public Specification<Event> getSpecification(EventSpecification specification) {}
-//    public static Specification<Event> findByName(String name){
-//        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("name"), name);
-//    }
+    
 }
