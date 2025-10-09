@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,11 +30,13 @@ public class AccountControllerTest {
     private AccountService accountService;
 
     @Test
+    @WithMockUser(username = "John Doe", roles = {"USER"})
     void getMyAccountInfos() throws Exception{
         Account accountUser = new Account("John", "John", "mail@gmail.com", "1234");
         Mockito.when(accountService.getUserModel()).thenReturn(AccountModel.of(accountUser));
 
-        AccountDto accountDtoCheck = new AccountDto(1, "John", "John", "mail@gmail.com");
+
+        AccountDto accountDtoCheck = AccountDto.of(AccountModel.of(accountUser));
 
         // J'appelle un mock
         MockHttpServletResponse response = mockMvc.perform(
@@ -44,10 +47,11 @@ public class AccountControllerTest {
         // Transforme liste en liste de bonbons
         //List<AccountDto> result = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<>(){});
 
+        AccountDto result = new ObjectMapper().readValue(response.getContentAsString(), new TypeReference<>(){});
         Assertions.assertEquals(200, response.getStatus());
 
         // On vérifie que la liste est bien vide
-        Assertions.assertEquals(accountDtoCheck, response.getContentAsString());
+        Assertions.assertEquals(accountDtoCheck, result);
     }
 
 
