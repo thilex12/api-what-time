@@ -39,6 +39,21 @@ public class NotifService {
                     .map(NotifModel::of);
     }
 
+    public void createNotifCrea(Event event, Account account, LocalDateTime date) {
+        Notif notifCrea = new Notif(event, 1, date, false, false, account);
+        notifRepository.save(notifCrea);
+    }
+
+    public void createNotifModif(Event event, Account account, LocalDateTime date) {
+        Notif notifModif = new Notif(event, 2, date, false, false, account);
+        notifRepository.save(notifModif);
+    }
+
+    public void createNotifDel(Event event, Account account, LocalDateTime date) {
+        Notif notifDel = new Notif(event, 3, date, false, false, account);
+        notifRepository.save(notifDel);
+    }
+
     @Transactional
     public NotifModel getNotif(int idNotif){
         try {
