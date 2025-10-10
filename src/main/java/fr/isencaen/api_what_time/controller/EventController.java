@@ -72,13 +72,13 @@ public class EventController {
 
 
     @Operation(summary = "Crée un évenement")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Évenement créé",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
-            @ApiResponse(responseCode = "400", description = "Requête invalide",
-                    content = @Content),
-    })
-    @PostMapping("v1/events")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "Évenement créé",
+//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CreateEventDto.class))}),
+//            @ApiResponse(responseCode = "400", description = "Requête invalide",
+//                    content = @Content),
+//    })
+    @PostMapping(value = "v1/events", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
             @Valid @RequestBody CreateEventDto createEventDto

@@ -31,6 +31,9 @@ public class DataLoader implements ApplicationRunner {
     AllowRepository allowRepository;
 
     @Autowired
+    TagEventRepository tagEventRepository;
+
+    @Autowired
     InscriptionRepository inscriptionRepository;
 
     @Autowired
@@ -67,10 +70,13 @@ public class DataLoader implements ApplicationRunner {
         event2.setVisibility(false);
         event2.setLocation(loc1);
         event2.setId_owner(2);
-        event2.setTags(tagRepository.findAll());
-
+//        event2.setTags(tagRepository.findAll());
 //        event2.setAllowedAccountsList(allowRepository.findAll());
         eventRepository.save(event2);
+
+        TagEvent tagEvent = new TagEvent(tag1, event2);
+        tagEventRepository.save(tagEvent);
+
 
         Event event3 = new Event();
         event3.setName("Event 3");

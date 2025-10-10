@@ -24,6 +24,7 @@ public class Event {
 
 
     @ManyToOne
+//    @JsonIgnore
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
@@ -31,11 +32,16 @@ public class Event {
     private boolean visibility;
     private boolean isArchived;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+//    @JsonIgnore
     private List<Allow> allowedAccountsList;
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+//    @JsonIgnore
     private List<Inscription> inscriptionsList;
-    @OneToMany(fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnore
     private List<TagEvent> tagsList = new ArrayList<>();
 
     public Event() {
@@ -175,12 +181,12 @@ public class Event {
         this.inscriptionsList = inscriptionsList;
     }
 
-    public List<Tag> getTags() {
-        return tags;
+    public List<TagEvent> getTagsList() {
+        return tagsList;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public void setTagsList(List<TagEvent> tagsList) {
+        this.tagsList = tagsList;
     }
 
     public boolean isArchived() {

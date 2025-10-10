@@ -30,6 +30,10 @@ public class EventService {
     InscriptionRepository inscriptionRepository;
     @Autowired
     TagRepository tagRepository;
+    @Autowired
+    TagEventService tagEventService;
+    @Autowired
+    LocationRepository locationRepository;
 
 //    @Cacheable(cacheNames = "events")
 //    @Transactional
@@ -76,7 +80,6 @@ public class EventService {
 
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
-
         int id_owner;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
@@ -85,11 +88,13 @@ public class EventService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
-        // Récupération des tags
-        List<Tag> tags = createEventModel.tagsList() != null && !createEventModel.tagsList().isEmpty()
-                ? tagRepository.findAllById(createEventModel.tagsList())
-                : List.of();
-        // Création de l'événement sans les tags
+
+        Location location = null;
+        if (createEventModel.locationId() != null) {
+            location = locationRepository.findById(createEventModel.locationId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location not found"));
+        }
+
         Event event = new Event(
                 id_owner,
                 createEventModel.name(),
@@ -97,14 +102,23 @@ public class EventService {
                 LocalDateTime.now(),
                 createEventModel.startDate(),
                 createEventModel.endDate(),
-                createEventModel.location(),
+                location,
                 createEventModel.visibility(),
                 false
         );
-        // Association des tags
-        event.setTags(tags);
-        // Sauvegarde de l'événement avec les tags
-        return EventModel.of(eventRepository.save(event));
+        EventModel eventModel = EventModel.of(eventRepository.save(event));
+
+        if (createEventModel.tags() != null && !createEventModel.tags().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(createEventModel.tags());
+            if (tags.size() != createEventModel.tags().size()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One or more tags do not exist");
+            }
+            for (Tag tag : tags) {
+                TagEvent tagEvent = new TagEvent(tag, event);
+                tagEventService.createTagEvent(TagEventModel.of(tagEvent));
+            }
+        }
+        return eventModel;
     }
 
     @CacheEvict(cacheNames = "events")
