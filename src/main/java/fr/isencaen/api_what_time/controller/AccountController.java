@@ -8,6 +8,7 @@ import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,10 +25,12 @@ public class AccountController {
     @GetMapping("v1/accounts/me")
     public AccountDto login(){
         AccountModel userModel = accountService.getUserModel();
+        if (userModel == null) return null;
         return AccountDto.of(userModel);
     }
 
     @PostMapping("v1/accounts")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto){
         AccountModel user = accountService.createAccount(CreateAccountModel.of(registerAccountDto));
         if (user == null) return null;
@@ -35,6 +38,7 @@ public class AccountController {
     }
 
     @PutMapping("v1/accounts/me")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto){
         AccountModel user = accountService.updateAccount(UpdateAccountModel.of(updateAccountDto));
         if (user == null) return null;
@@ -42,6 +46,7 @@ public class AccountController {
     }
 
     @DeleteMapping("v1/accounts/me")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDto deleteMe(){
         AccountModel userDeleted = accountService.deleteAccount();
         if (userDeleted == null) return null;
