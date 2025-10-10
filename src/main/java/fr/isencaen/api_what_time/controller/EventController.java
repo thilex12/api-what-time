@@ -122,6 +122,15 @@ public class EventController {
         eventService.addAccountToAllowedList(eventId, accountId);
     }
 
+    @DeleteMapping("v1/events/{eventId}/accounts/{accountId}/delete")
+    public void removeAccountFromAllowedList(
+            @PathVariable int eventId,
+            @PathVariable int accountId
+    ) {
+        eventService.removeAccountFromAllowedList(eventId, accountId);
+    }
+
+
     @PostMapping("v1/events/{eventId}/join")
     @ResponseStatus(HttpStatus.CREATED)
     public void joinEvent(
@@ -129,6 +138,7 @@ public class EventController {
     ) {
         eventService.joinEvent(eventId);
     }
+
 
     @DeleteMapping("v1/events/{eventId}/leave")
     public void leaveEvent(

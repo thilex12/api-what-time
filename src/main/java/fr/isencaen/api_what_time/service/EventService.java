@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -48,7 +50,7 @@ public class EventService {
             Account user_account = user.getAccount();
             id_user = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         return eventRepository.findAll(
@@ -67,7 +69,12 @@ public class EventService {
     //    @Cacheable(cacheNames = "events")
     @Transactional
     public EventModel getEventById(int id) {
-        return EventModel.of(eventRepository.findById(id).orElseThrow());
+        Event eventEntity = eventRepository.findById(id).orElseThrow();
+        if (eventEntity.isArchived()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+        EventModel event = EventModel.of(eventEntity);
+        return event;
     }
 
     @Transactional
@@ -79,7 +86,7 @@ public class EventService {
             Account user_account = user.getAccount();
             id_owner = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         return EventModel.of(eventRepository.save(
@@ -114,7 +121,7 @@ public class EventService {
             Account user_account = user.getAccount();
             id_owner = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
 
@@ -136,16 +143,16 @@ public class EventService {
             Account user_account = user.getAccount();
             id_owner = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         Event event = eventRepository.findById(eventId).orElseThrow();
         var account = accountRepository.findById(accountId).orElseThrow();
         if (event.getId_owner() != id_owner) {
-            throw new RuntimeException("Only the owner can add allowed accounts");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the event owner can add allowed accounts");
         }
         if (event.isVisibility()) {
-            throw new RuntimeException("Only private events can have allowed accounts");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only private events can have allowed accounts list");
         }
         Allow allow = new Allow(account, event);
         allowRepository.save(allow);
@@ -162,27 +169,22 @@ public class EventService {
             Account user_account = user.getAccount();
             id_user = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         Event event = eventRepository.findById(eventId).orElseThrow();
         var account = accountRepository.findById(id_user).orElseThrow();
 
         if (event.getInscriptionsList().stream().anyMatch(inscriptions -> inscriptions.getAccount().getId() == id_user)) {
-            throw new RuntimeException("User already joined the event");
-        }
-        if (event.isVisibility()) {
-            Inscription inscription = new Inscription(account, event);
-            inscriptionRepository.save(inscription);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already registered to the event");
         }
         if (!event.isVisibility()) {
             if (event.getAllowedAccountsList().stream().noneMatch(allow -> allow.getAccount().getId() == id_user)) {
-                throw new RuntimeException("User not allowed to join the event");
-            } else {
-                Inscription inscription = new Inscription(account, event);
-                inscriptionRepository.save(inscription);
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not allowed to register to this event");
             }
         }
+        Inscription inscription = new Inscription(account, event);
+        inscriptionRepository.save(inscription);
     }
 
     @Transactional
@@ -194,18 +196,41 @@ public class EventService {
             Account user_account = user.getAccount();
             id_user = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         Event event = eventRepository.findById(eventId).orElseThrow();
-        var account = accountRepository.findById(id_user).orElseThrow();
+//        var account = accountRepository.findById(id_user);
 
         Inscription inscription = event.getInscriptionsList().stream()
                 .filter(inscriptions -> inscriptions.getAccount().getId() == id_user)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("L'utilisateur n'est pas inscrit à l'événement"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not registered to the event"));
 
         event.getInscriptionsList().remove(inscription);
         inscriptionRepository.delete(inscription);
+    }
+
+    public void removeAccountFromAllowedList(int eventId, int accountId) {
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+//        var account = accountRepository.findById(accountId)
+        if (event.getId_owner() != id_owner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the event owner can remove allowed accounts");
+        }
+        Allow allow = event.getAllowedAccountsList().stream()
+                .filter(allowfilter -> allowfilter.getAccount().getId() == accountId)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not in the allowed accounts list"));
+        event.getAllowedAccountsList().remove(allow);
+        allowRepository.delete(allow);
     }
 }
