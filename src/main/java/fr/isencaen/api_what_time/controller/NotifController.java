@@ -2,6 +2,7 @@ package fr.isencaen.api_what_time.controller;
 
 import fr.isencaen.api_what_time.controller.Dto.NotifDto;
 import fr.isencaen.api_what_time.repository.Entity.Notif;
+import fr.isencaen.api_what_time.service.Model.NotifModel;
 import fr.isencaen.api_what_time.service.NotifService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,15 @@ public class NotifController {
 
     @GetMapping("v1/notif/{idNotif}")
     public NotifDto getNotif(@PathVariable int idNotif){
-        return NotifDto.of(notifService.getNotif(idNotif));
+        NotifModel notif = notifService.getNotif(idNotif);
+        if (notif == null) return null;
+        return NotifDto.of(notif);
     }
 
+    @DeleteMapping ("v1/notif/{idNotif}")
+    public NotifDto deleteNotif(@PathVariable int idNotif){
+        NotifModel notif = notifService.deleteNotif(idNotif);
+        if (notif == null) return null;
+        return NotifDto.of(notif);
+    }
 }

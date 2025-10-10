@@ -108,6 +108,9 @@ public class DataLoader implements ApplicationRunner {
         Notif notif4 = new Notif(event2, 1, LocalDateTime.now(), false, false, account2);
         notifRepository.save(notif4);
 
+        Notif notif5 = new Notif(event3, 1, LocalDateTime.now(), false, true, account2);
+        notifRepository.save(notif5);
+
         Inscription inscription = new Inscription(account, event1);
         inscriptionRepository.save(inscription);
 
