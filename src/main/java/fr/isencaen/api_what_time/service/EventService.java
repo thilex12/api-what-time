@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.service;
 import fr.isencaen.api_what_time.repository.*;
 import fr.isencaen.api_what_time.repository.Entity.*;
 import fr.isencaen.api_what_time.service.Model.*;
+import fr.isencaen.api_what_time.service.NotifService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import java.util.List;
 @Service
 public class EventService {
 
+    @Autowired
+    NotifService notifService;
     @Autowired
     EventRepository eventRepository;
     @Autowired
@@ -80,10 +83,12 @@ public class EventService {
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
         int id_owner;
+
+        LocalDateTime createddate = LocalDateTime.now();
+        Account user_account;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
-            Account user_account = user.getAccount();
-            id_owner = user_account.getId();
+            user_account = user.getAccount();
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
@@ -95,7 +100,7 @@ public class EventService {
         }
 
         Event event = new Event(
-                id_owner,
+                user_account.getId(),
                 createEventModel.name(),
                 createEventModel.description(),
                 LocalDateTime.now(),
@@ -106,6 +111,9 @@ public class EventService {
                 false
         );
         EventModel eventModel = EventModel.of(eventRepository.save(event));
+
+        notifService.createNotifDel(event, user_account, LocalDateTime.now());
+        return EventModel.of(eventRepository.save(event));
 
         if (createEventModel.tags() != null && !createEventModel.tags().isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(createEventModel.tags());
@@ -123,24 +131,38 @@ public class EventService {
     //    @CacheEvict(cacheNames = "events")
     @Transactional
     public void deleteEvent(int id) {
+        Account user_account;
         Event event = eventRepository.findById(id).orElseThrow();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            user_account = user.getAccount();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+        if (event.getId() != user_account.getId())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to delete");
+
+        notifService.createNotifDel(event, user_account, LocalDateTime.now());
         event.setArchived(true);
     }
 
     @Transactional
     public EventModel updateEvent(int id, UpdateEventModel updateEventModel) {
 
-        int id_owner;
+        Event event = eventRepository.findById(id).orElseThrow();
+        Account user_account;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
-            Account user_account = user.getAccount();
-            id_owner = user_account.getId();
+            user_account = user.getAccount();
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
+        if (event.getId() != user_account.getId())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to delete");
+
+        notifService.createNotifModif(event, user_account, LocalDateTime.now());
 
 
-        Event event = eventRepository.findById(id).orElseThrow();
         event.setName(updateEventModel.name());
         event.setDescription(updateEventModel.description());
         event.setStartDate(updateEventModel.startDate());

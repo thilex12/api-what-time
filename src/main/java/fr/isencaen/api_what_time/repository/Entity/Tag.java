@@ -16,7 +16,7 @@ public class Tag {
     private String name;
 
     //    @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    //@JsonManagedReference
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TagEvent> tagEvents;
 
