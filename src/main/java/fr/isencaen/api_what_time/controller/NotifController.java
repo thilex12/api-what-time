@@ -3,6 +3,9 @@ package fr.isencaen.api_what_time.controller;
 import fr.isencaen.api_what_time.controller.Dto.NotifDto;
 import fr.isencaen.api_what_time.repository.Entity.Notif;
 import fr.isencaen.api_what_time.service.NotifService;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +19,11 @@ public class NotifController {
     }
 
     @GetMapping("v1/notif")
-    public List<NotifDto> getAllNotifs(){
-         return notifService.getAllNotifs().stream().map(NotifDto::of).toList();
+    public Page<NotifDto> getAllNotifs(
+            @ParameterObject Pageable pageable
+    ){
+
+         return notifService.getAllNotifs(pageable).map(NotifDto::of);
     }
 
     @GetMapping("v1/notif/{idNotif}")

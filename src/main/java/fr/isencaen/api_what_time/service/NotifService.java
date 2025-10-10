@@ -4,6 +4,8 @@ import fr.isencaen.api_what_time.repository.Entity.Notif;
 import fr.isencaen.api_what_time.repository.NotifRepository;
 import fr.isencaen.api_what_time.service.Model.AccountPrincipal;
 import fr.isencaen.api_what_time.service.Model.EventModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ public class NotifService {
     }
 
 
-    public List<NotifModel> getAllNotifs(){
+    public Page<NotifModel> getAllNotifs(
+            Pageable pageable
+    ){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal)) return null;
         AccountPrincipal user = (AccountPrincipal) auth.getPrincipal();
-            return notifRepository.findAllByAccountIdAndArchive(user.getAccount().getId(), false)
-                .stream().map(NotifModel::of).toList();
+            return notifRepository.findAllByAccountIdAndArchive(user.getAccount().getId(), false, pageable)
+                    .map(NotifModel::of);
     }
 
     public NotifModel getNotif(int idNotif){
