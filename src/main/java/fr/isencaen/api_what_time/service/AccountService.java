@@ -110,12 +110,13 @@ public class AccountService {
         // Récupération de la bdd de la ligne de l'utilisateur connecté
         Account userAccount = getUserAccount();
         if (userAccount == null) return null;
-
-        Account bddAccount = accountRepository.findById(userAccount.getId()).orElseThrow();
-
-        if (bddAccount == null){
+        Account bddAccount;
+        try{
             // Cas où le compte demandé n'existe pas (peu probable)
-            return null;
+            bddAccount = accountRepository.findById(userAccount.getId()).orElseThrow();
+        }
+        catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account doesn't match");
         }
 
         // Récupération des champs
@@ -162,12 +163,14 @@ public class AccountService {
     public AccountModel deleteAccount(){
         Account userAccount = getUserAccount();
         if (userAccount == null) return null;
-
-        Account account = accountRepository.findById(userAccount.getId()).orElseThrow();
-        if (account == null) return null;
-
-        account.setArchived(true);
-        return AccountModel.of(account);
+        try{
+            Account account = accountRepository.findById(userAccount.getId()).orElseThrow();
+            account.setArchived(true);
+            return AccountModel.of(account);
+        }
+        catch (EntityNotFoundException e){
+            return null;
+        }
     }
 
 }
