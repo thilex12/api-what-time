@@ -2,24 +2,22 @@ package fr.isencaen.api_what_time.service;
 
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
-import fr.isencaen.api_what_time.service.Model.AccountModel;
-import fr.isencaen.api_what_time.service.Model.AccountPrincipal;
-import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
-import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
+import fr.isencaen.api_what_time.repository.Entity.Tag;
+import fr.isencaen.api_what_time.repository.TagRepository;
+import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AccountService {
@@ -28,6 +26,9 @@ public class AccountService {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     private String reformatStrEntry(String s){
         if (s == null) return null;
@@ -46,8 +47,9 @@ public class AccountService {
         return !checkMail.isEmpty();
     }
 
-    public AccountService(AccountRepository accountRepository){
+    public AccountService(AccountRepository accountRepository, TagRepository tagRepository){
         this.accountRepository = accountRepository;
+        this.tagRepository = tagRepository;
     }
 
     public Account getUserAccount(){
@@ -85,21 +87,17 @@ public class AccountService {
         mail = reformatStrEntry(createAccountModel.mail());
         pwd = createAccountModel.pwd(); // Ne doit pas être formaté...
 
-
+        if (name == null || surname == null || mail == null || pwd == null){
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Paramètre manquant");
+        }
         if (mailInvalid(mail)){
             // Cas où mail donné n'est pas un mail valide
-            /*throw new HttpStatusCodeException(HttpStatusCode.valueOf(510)){
-
-            };*/
-            return null;
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid email");
         }
 
         if(mailUsed(mail)){
             // Cas où mail déjà utilisé
-            /*throw new HttpStatusCodeException(HttpStatusCode.valueOf(510)){
-
-            };*/
-            return null;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email already used");
         }
 
         return AccountModel.of(
@@ -112,38 +110,33 @@ public class AccountService {
         // Récupération de la bdd de la ligne de l'utilisateur connecté
         Account userAccount = getUserAccount();
         if (userAccount == null) return null;
-
-        Account bddAccount = accountRepository.findById(userAccount.getId()).orElseThrow();
-
-        if (bddAccount == null){
+        Account bddAccount;
+        try{
             // Cas où le compte demandé n'existe pas (peu probable)
-            return null;
+            bddAccount = accountRepository.findById(userAccount.getId()).orElseThrow();
+        }
+        catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account doesn't match");
         }
 
         // Récupération des champs
         String name, surname, mail, pwd;
+        List<Integer> tags;
         name = reformatStrEntry(updateAsked.name());
         surname = reformatStrEntry(updateAsked.surname());
         mail = reformatStrEntry(updateAsked.mail());
         pwd = updateAsked.pwd(); // Ne pas formatter le mdp
+        tags = updateAsked.tags();
 
         if (mail != null){
             if (mailInvalid(mail)){
                 // Cas où mail donné n'est pas un mail valide
-
-                return null;
-                /*throw new HttpStatusCodeException(HttpStatusCode.valueOf(510)){
-
-                };*/
-
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid email");
             }
 
             if(mailUsed(mail)){
                 // Cas où mail déjà utilisé
-                /*throw new HttpStatusCodeException(HttpStatusCode.valueOf(520)){
-
-                };*/
-                return null;
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email already used");
             }
         }
 
@@ -152,7 +145,17 @@ public class AccountService {
         if (surname != null && !surname.isBlank()) bddAccount.setSurname(updateAsked.surname());
         if (mail != null && !mail.isBlank()) bddAccount.setMail(updateAsked.mail());
         if (pwd != null && !pwd.isBlank()) bddAccount.setPwd(bCryptPasswordEncoder.encode(updateAsked.pwd()));
-
+        if (tags != null){
+            List<Tag> newTags = new ArrayList<>();
+            for(int id : tags){
+                try {
+                    Tag tag = tagRepository.findById(id).orElseThrow();
+                    newTags.add(tag);
+                }
+                catch (NoSuchElementException e){}
+            }
+            bddAccount.setTags(newTags);
+        }
         return AccountModel.of(bddAccount);
     }
 
@@ -160,12 +163,14 @@ public class AccountService {
     public AccountModel deleteAccount(){
         Account userAccount = getUserAccount();
         if (userAccount == null) return null;
-
-        Account account = accountRepository.findById(userAccount.getId()).orElseThrow();
-        if (account == null) return null;
-
-        account.setArchived(true);
-        return AccountModel.of(account);
+        try{
+            Account account = accountRepository.findById(userAccount.getId()).orElseThrow();
+            account.setArchived(true);
+            return AccountModel.of(account);
+        }
+        catch (EntityNotFoundException e){
+            return null;
+        }
     }
 
 }
