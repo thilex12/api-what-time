@@ -88,8 +88,13 @@ public class DataLoader implements ApplicationRunner {
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);
-        account.setTags(tagRepository.findAll());
         accountRepository.save(account);
+        account.setTags(tagRepository.findAll());
+
+        Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
+//        account.addTag(tag1);
+        accountRepository.save(account2);
+        account2.setTags(tagRepository.findAll());
 
         Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
         notifRepository.save(notif1);
@@ -99,6 +104,12 @@ public class DataLoader implements ApplicationRunner {
 
         Notif notif3 = new Notif(event1, 2, LocalDateTime.now(), false, false, account);
         notifRepository.save(notif3);
+
+        Notif notif4 = new Notif(event2, 1, LocalDateTime.now(), false, false, account2);
+        notifRepository.save(notif4);
+
+        Notif notif5 = new Notif(event3, 1, LocalDateTime.now(), false, true, account2);
+        notifRepository.save(notif5);
 
         Inscription inscription = new Inscription(account, event1);
         inscriptionRepository.save(inscription);
