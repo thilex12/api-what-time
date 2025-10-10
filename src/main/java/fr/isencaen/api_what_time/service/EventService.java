@@ -113,7 +113,7 @@ public class EventService {
         EventModel eventModel = EventModel.of(eventRepository.save(event));
 
         notifService.createNotifDel(event, user_account, LocalDateTime.now());
-        return EventModel.of(eventRepository.save(event));
+//        return EventModel.of(eventRepository.save(event));
 
         if (createEventModel.tags() != null && !createEventModel.tags().isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(createEventModel.tags());
