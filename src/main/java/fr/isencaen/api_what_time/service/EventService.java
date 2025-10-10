@@ -127,8 +127,23 @@ public class EventService {
 
     @Transactional
     public void addAccountToAllowedList(int eventId, int accountId) {
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+
         Event event = eventRepository.findById(eventId).orElseThrow();
         var account = accountRepository.findById(accountId).orElseThrow();
+        if (event.getId_owner() != id_owner) {
+            throw new RuntimeException("Only the owner can add allowed accounts");
+        }
+        if (event.isVisibility()) {
+            throw new RuntimeException("Only private events can have allowed accounts");
+        }
         Allow allow = new Allow(account, event);
         allowRepository.save(allow);
         event.getAllowedAccountsList().add(allow);

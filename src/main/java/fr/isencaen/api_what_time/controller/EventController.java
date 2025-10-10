@@ -21,6 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.NoSuchElementException;
 
 @RestController
 public class EventController {
@@ -41,6 +44,7 @@ public class EventController {
             @ParameterObject Pageable pageable,
             @ParameterObject EventFilterDto eventFilter
     ) {
+
         return eventService.getEvents(
                 pageable,
                 EventFilterModel.of(eventFilter)
@@ -59,9 +63,21 @@ public class EventController {
     public EventDto getEventById(
             @PathVariable int id
     ) {
-        return EventDto.of(eventService.getEventById(id));
+        try {
+            return EventDto.of(eventService.getEventById(id));
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Évenement non trouvé");
+        }
     }
 
+
+    @Operation(summary = "Crée un évenement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Évenement créé",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Requête invalide",
+                    content = @Content),
+    })
     @PostMapping("v1/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
@@ -70,7 +86,7 @@ public class EventController {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
     }
 
-
+    @Operation(summary = "Supprime un évenement par son ID")
     @DeleteMapping("v1/events/{id}")
 //    @ResponseStatus(HttpStatus.)
     public void deleteEvent(
@@ -79,6 +95,15 @@ public class EventController {
         eventService.deleteEvent(id);
     }
 
+    @Operation(summary = "Met à jour un évenement par son ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Évenement mis à jour",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Requête invalide",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Évenement non trouvé",
+                    content = @Content),
+    })
     @PutMapping("v1/events/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateEvent(
@@ -88,8 +113,9 @@ public class EventController {
         return EventDto.of(eventService.updateEvent(id, UpdateEventModel.of(updateEventDto)));
     }
 
+    @Operation(summary = "Ajoute un compte à la liste des comptes autorisés à voir un évenement privé")
     @PostMapping("v1/events/{eventId}/allow/{accountId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void addAccountToAllowedList(
             @PathVariable int eventId,
             @PathVariable int accountId

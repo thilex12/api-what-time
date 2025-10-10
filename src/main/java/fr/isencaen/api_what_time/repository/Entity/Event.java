@@ -30,11 +30,11 @@ public class Event {
     private boolean visibility;
     private boolean isArchived;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private List<Allow> allowedAccountsList;
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private List<Inscription> inscriptionsList;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
 
