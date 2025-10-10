@@ -5,7 +5,6 @@ import fr.isencaen.api_what_time.repository.Entity.*;
 import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -121,7 +120,7 @@ public class EventService {
         return eventModel;
     }
 
-    @CacheEvict(cacheNames = "events")
+    //    @CacheEvict(cacheNames = "events")
     @Transactional
     public void deleteEvent(int id) {
         Event event = eventRepository.findById(id).orElseThrow();
