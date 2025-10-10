@@ -5,12 +5,13 @@ import fr.isencaen.api_what_time.repository.AllowRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.repository.Entity.Allow;
 import fr.isencaen.api_what_time.repository.Entity.Event;
+import fr.isencaen.api_what_time.repository.Entity.Inscription;
 import fr.isencaen.api_what_time.repository.EventRepository;
+import fr.isencaen.api_what_time.repository.InscriptionRepository;
 import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,8 @@ public class EventService {
     AllowRepository allowRepository;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    InscriptionRepository inscriptionRepository;
 
 //    @Cacheable(cacheNames = "events")
 //    @Transactional
@@ -61,7 +64,7 @@ public class EventService {
         ).map(EventModel::of);
     }
 
-    @Cacheable(cacheNames = "events")
+    //    @Cacheable(cacheNames = "events")
     @Transactional
     public EventModel getEventById(int id) {
         return EventModel.of(eventRepository.findById(id).orElseThrow());
@@ -150,5 +153,59 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    @Transactional
+    public void joinEvent(int eventId) {
 
+        int id_user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_user = user_account.getId();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        var account = accountRepository.findById(id_user).orElseThrow();
+
+        if (event.getInscriptionsList().stream().anyMatch(inscriptions -> inscriptions.getAccount().getId() == id_user)) {
+            throw new RuntimeException("User already joined the event");
+        }
+        if (event.isVisibility()) {
+            Inscription inscription = new Inscription(account, event);
+            inscriptionRepository.save(inscription);
+        }
+        if (!event.isVisibility()) {
+            if (event.getAllowedAccountsList().stream().noneMatch(allow -> allow.getAccount().getId() == id_user)) {
+                throw new RuntimeException("User not allowed to join the event");
+            } else {
+                Inscription inscription = new Inscription(account, event);
+                inscriptionRepository.save(inscription);
+            }
+        }
+    }
+
+    @Transactional
+    public void leaveEvent(int eventId) {
+
+        int id_user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_user = user_account.getId();
+        } else {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        var account = accountRepository.findById(id_user).orElseThrow();
+
+        Inscription inscription = event.getInscriptionsList().stream()
+                .filter(inscriptions -> inscriptions.getAccount().getId() == id_user)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("L'utilisateur n'est pas inscrit à l'événement"));
+
+        event.getInscriptionsList().remove(inscription);
+        inscriptionRepository.delete(inscription);
+    }
 }

@@ -28,6 +28,7 @@ public class TagController {
         return TagDto.of(tagService.getTagById(id));
     }
 
+
     @PostMapping("v1/tags")
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto createTag(

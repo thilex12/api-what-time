@@ -58,7 +58,7 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Évenement non trouvé",
                     content = @Content),
     })
-    @ResponseStatus(HttpStatus.FOUND)
+
     @GetMapping("v1/events/{id}")
     public EventDto getEventById(
             @PathVariable int id
@@ -88,7 +88,6 @@ public class EventController {
 
     @Operation(summary = "Supprime un évenement par son ID")
     @DeleteMapping("v1/events/{id}")
-//    @ResponseStatus(HttpStatus.)
     public void deleteEvent(
             @PathVariable int id
     ) {
@@ -114,13 +113,28 @@ public class EventController {
     }
 
     @Operation(summary = "Ajoute un compte à la liste des comptes autorisés à voir un évenement privé")
-    @PostMapping("v1/events/{eventId}/allow/{accountId}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("v1/events/{eventId}/accounts/{accountId}/allow")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addAccountToAllowedList(
             @PathVariable int eventId,
             @PathVariable int accountId
     ) {
         eventService.addAccountToAllowedList(eventId, accountId);
+    }
+
+    @PostMapping("v1/events/{eventId}/join")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void joinEvent(
+            @PathVariable int eventId
+    ) {
+        eventService.joinEvent(eventId);
+    }
+
+    @DeleteMapping("v1/events/{eventId}/leave")
+    public void leaveEvent(
+            @PathVariable int eventId
+    ) {
+        eventService.leaveEvent(eventId);
     }
 
 }
