@@ -84,6 +84,8 @@ public class EventController {
             @Valid @RequestBody CreateEventDto createEventDto
     ) {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
+//        return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
+
     }
 
     @Operation(summary = "Supprime un évenement par son ID")

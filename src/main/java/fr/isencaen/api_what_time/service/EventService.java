@@ -1,13 +1,7 @@
 package fr.isencaen.api_what_time.service;
 
-import fr.isencaen.api_what_time.repository.AccountRepository;
-import fr.isencaen.api_what_time.repository.AllowRepository;
-import fr.isencaen.api_what_time.repository.Entity.Account;
-import fr.isencaen.api_what_time.repository.Entity.Allow;
-import fr.isencaen.api_what_time.repository.Entity.Event;
-import fr.isencaen.api_what_time.repository.Entity.Inscription;
-import fr.isencaen.api_what_time.repository.EventRepository;
-import fr.isencaen.api_what_time.repository.InscriptionRepository;
+import fr.isencaen.api_what_time.repository.*;
+import fr.isencaen.api_what_time.repository.Entity.*;
 import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EventService {
@@ -33,6 +28,8 @@ public class EventService {
     AccountRepository accountRepository;
     @Autowired
     InscriptionRepository inscriptionRepository;
+    @Autowired
+    TagRepository tagRepository;
 
 //    @Cacheable(cacheNames = "events")
 //    @Transactional
@@ -88,21 +85,26 @@ public class EventService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
-
-        return EventModel.of(eventRepository.save(
-                new Event(
-                        id_owner,
-                        createEventModel.name(),
-                        createEventModel.description(),
-                        LocalDateTime.now(),
-                        createEventModel.startDate(),
-                        createEventModel.endDate(),
-                        createEventModel.location(),
-                        createEventModel.visibility(),
-                        false
-
-                )
-        ));
+        // Récupération des tags
+        List<Tag> tags = createEventModel.tagsList() != null && !createEventModel.tagsList().isEmpty()
+                ? tagRepository.findAllById(createEventModel.tagsList())
+                : List.of();
+        // Création de l'événement sans les tags
+        Event event = new Event(
+                id_owner,
+                createEventModel.name(),
+                createEventModel.description(),
+                LocalDateTime.now(),
+                createEventModel.startDate(),
+                createEventModel.endDate(),
+                createEventModel.location(),
+                createEventModel.visibility(),
+                false
+        );
+        // Association des tags
+        event.setTags(tags);
+        // Sauvegarde de l'événement avec les tags
+        return EventModel.of(eventRepository.save(event));
     }
 
     @CacheEvict(cacheNames = "events")

@@ -7,16 +7,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ValidEventDates
 public record CreateEventDto(
-        int id_owner,
+//        int id_owner,
         @NotBlank(message = "Le nom doit etre renseigné")
         String name,
 
         String description,
 
-        LocalDateTime creationDate,
+//        LocalDateTime creationDate,
 
         @NotNull(message = "La date de début doit etre renseignée")
         @FutureOrPresent
@@ -28,24 +29,26 @@ public record CreateEventDto(
 
         Location location,
 
-        @NotBlank(message = "La visibilité doit etre renseignée")
+//        @NotBlank(message = "La visibilité doit etre renseignée")
         boolean visibility,
+        List<Integer> tagsList
 
 
-        boolean isArchived
+//        boolean isArchived
 
 ) {
     public static CreateEventDto of(CreateEventModel event) {
         return new CreateEventDto(
-                event.id_owner(),
+//                event.id_owner(),
                 event.name(),
                 event.description(),
-                event.creationDate(),
+//                event.creationDate(),
                 event.startDate(),
                 event.endDate(),
                 event.location(),
                 event.visibility(),
-                event.isArchived()
+                event.tagsList()
+//                event.isArchived()
 
         );
     }

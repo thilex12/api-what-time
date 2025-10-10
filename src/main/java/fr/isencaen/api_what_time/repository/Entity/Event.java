@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,8 +36,7 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private List<Inscription> inscriptionsList;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Tag> tags;
-
+    private List<TagEvent> tagsList = new ArrayList<>();
 
     public Event() {
     }

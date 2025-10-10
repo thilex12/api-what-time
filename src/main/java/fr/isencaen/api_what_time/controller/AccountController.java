@@ -8,6 +8,7 @@ import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,47 +18,48 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService){
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @GetMapping("v1/accounts/me")
-    public AccountDto login(){
+    public AccountDto login() {
         AccountModel userModel = accountService.getUserModel();
         return AccountDto.of(userModel);
     }
 
     @PostMapping("v1/accounts")
-    public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto){
+    public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto) {
         AccountModel user = accountService.createAccount(CreateAccountModel.of(registerAccountDto));
         if (user == null) return null;
         return AccountDto.of(user);
     }
 
     @PutMapping("v1/accounts/me")
-    public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto){
+    public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto) {
         AccountModel user = accountService.updateAccount(UpdateAccountModel.of(updateAccountDto));
         if (user == null) return null;
         return AccountDto.of(user);
     }
 
     @DeleteMapping("v1/accounts/me")
-    public AccountDto deleteMe(){
+    public AccountDto deleteMe() {
         AccountModel userDeleted = accountService.deleteAccount();
         if (userDeleted == null) return null;
         return AccountDto.of(userDeleted);
     }
 
     @GetMapping("v1/accounts/{accountId}")
-    public OtherAccountDto getOtherAccountInfo(@PathVariable Integer accountId){
+    public OtherAccountDto getOtherAccountInfo(@PathVariable Integer accountId) {
         AccountModel account = accountService.getAccountModelById(accountId);
         if (account == null) return null;
         return OtherAccountDto.of(account);
     }
 
     // Uniquement pour débug
+    @Profile("!prod")
     @GetMapping("v1/accounts/test")
-    public List<Integer> testRoad(){
+    public List<Integer> testRoad() {
         return List.of();
     }
 }
