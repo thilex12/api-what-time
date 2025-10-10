@@ -16,11 +16,11 @@ public class Account {
     private String pwd;
     private boolean archived;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Allow> allowedList;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Inscription> inscriptions;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
     //    org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: fr.isencaen.api_what_time.repository.Entity.Account.tags: could not initialize proxy - no Session

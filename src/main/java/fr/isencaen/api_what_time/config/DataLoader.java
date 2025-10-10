@@ -113,5 +113,9 @@ public class DataLoader implements ApplicationRunner {
         Allow allowEvent1 = new Allow(account, event1);
         allowRepository.save(allowEvent1);
 
+
+        Tag tag2 = new Tag("Test2");
+        tagRepository.save(tag2);
+
     }
 }
