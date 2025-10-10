@@ -88,8 +88,13 @@ public class DataLoader implements ApplicationRunner {
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);
-        account.setTags(tagRepository.findAll());
         accountRepository.save(account);
+        account.setTags(tagRepository.findAll());
+
+        Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
+//        account.addTag(tag1);
+        accountRepository.save(account2);
+        account2.setTags(tagRepository.findAll());
 
         Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
         notifRepository.save(notif1);

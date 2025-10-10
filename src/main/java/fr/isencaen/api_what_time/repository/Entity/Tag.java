@@ -13,10 +13,10 @@ public class Tag {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Event> events;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Account> accounts;
 
 
