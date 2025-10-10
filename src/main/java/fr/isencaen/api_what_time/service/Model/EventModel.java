@@ -15,7 +15,7 @@ public record EventModel(
         LocalDateTime endDate,
         LocationModel location,
         boolean visibility,
-        List<TagModel> tagsList
+        List<TagEventModel> tags
 
 ) {
 
@@ -30,7 +30,7 @@ public record EventModel(
                 event.getEndDate(),
                 LocationModel.of(event.getLocation()),
                 event.isVisibility(),
-                event.getTags().stream().map(TagModel::of).toList()
+                event.getTagsList().stream().map(TagEventModel::of).toList()
 //                event.getTagsList().stream().map(TagModel::of).toList()
         );
     }

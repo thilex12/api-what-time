@@ -21,6 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.NoSuchElementException;
 
 @RestController
 public class EventController {
@@ -41,6 +44,7 @@ public class EventController {
             @ParameterObject Pageable pageable,
             @ParameterObject EventFilterDto eventFilter
     ) {
+
         return eventService.getEvents(
                 pageable,
                 EventFilterModel.of(eventFilter)
@@ -54,31 +58,54 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Évenement non trouvé",
                     content = @Content),
     })
-    @ResponseStatus(HttpStatus.FOUND)
+
     @GetMapping("v1/events/{id}")
     public EventDto getEventById(
             @PathVariable int id
     ) {
-        return EventDto.of(eventService.getEventById(id));
+        try {
+            return EventDto.of(eventService.getEventById(id));
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Évenement non trouvé");
+        }
     }
 
-    @PostMapping("v1/events")
+
+    @Operation(summary = "Crée un évenement")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "Évenement créé",
+//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CreateEventDto.class))}),
+//            @ApiResponse(responseCode = "400", description = "Requête invalide",
+//                    content = @Content),
+//    })
+    @PostMapping(value = "v1/events", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
-            @Valid @RequestBody CreateEventDto createEventDto
+            @RequestBody CreateEventDto createEventDto
+//            @Valid @RequestBody CreateEventDto createEventDto
     ) {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
+//        return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
+
     }
 
-
+    @Operation(summary = "Supprime un évenement par son ID")
     @DeleteMapping("v1/events/{id}")
-//    @ResponseStatus(HttpStatus.)
     public void deleteEvent(
             @PathVariable int id
     ) {
         eventService.deleteEvent(id);
     }
 
+    @Operation(summary = "Met à jour un évenement par son ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Évenement mis à jour",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Requête invalide",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Évenement non trouvé",
+                    content = @Content),
+    })
     @PutMapping("v1/events/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateEvent(
@@ -88,13 +115,39 @@ public class EventController {
         return EventDto.of(eventService.updateEvent(id, UpdateEventModel.of(updateEventDto)));
     }
 
-    @PostMapping("v1/events/{eventId}/allow/{accountId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Ajoute un compte à la liste des comptes autorisés à voir un évenement privé")
+    @PostMapping("v1/events/{eventId}/accounts/{accountId}/allow")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addAccountToAllowedList(
             @PathVariable int eventId,
             @PathVariable int accountId
     ) {
         eventService.addAccountToAllowedList(eventId, accountId);
+    }
+
+    @DeleteMapping("v1/events/{eventId}/accounts/{accountId}/delete")
+    public void removeAccountFromAllowedList(
+            @PathVariable int eventId,
+            @PathVariable int accountId
+    ) {
+        eventService.removeAccountFromAllowedList(eventId, accountId);
+    }
+
+
+    @PostMapping("v1/events/{eventId}/join")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void joinEvent(
+            @PathVariable int eventId
+    ) {
+        eventService.joinEvent(eventId);
+    }
+
+
+    @DeleteMapping("v1/events/{eventId}/leave")
+    public void leaveEvent(
+            @PathVariable int eventId
+    ) {
+        eventService.leaveEvent(eventId);
     }
 
 }

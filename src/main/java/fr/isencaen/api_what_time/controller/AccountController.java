@@ -8,6 +8,7 @@ import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,12 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService){
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @GetMapping("v1/accounts/me")
-    public AccountDto login(){
+    public AccountDto login() {
         AccountModel userModel = accountService.getUserModel();
         if (userModel == null) return null;
         return AccountDto.of(userModel);
@@ -54,15 +55,16 @@ public class AccountController {
     }
 
     @GetMapping("v1/accounts/{accountId}")
-    public OtherAccountDto getOtherAccountInfo(@PathVariable Integer accountId){
+    public OtherAccountDto getOtherAccountInfo(@PathVariable Integer accountId) {
         AccountModel account = accountService.getAccountModelById(accountId);
         if (account == null) return null;
         return OtherAccountDto.of(account);
     }
 
     // Uniquement pour débug
+    @Profile("!prod")
     @GetMapping("v1/accounts/test")
-    public List<Integer> testRoad(){
+    public List<Integer> testRoad() {
         return List.of();
     }
 }

@@ -23,6 +23,8 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Tag> tags;
 
+    private String role;
+
     //    org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: fr.isencaen.api_what_time.repository.Entity.Account.tags: could not initialize proxy - no Session
     public Account() {
         this.allowedList = List.of();
@@ -54,8 +56,24 @@ public class Account {
         this.archived = false;
     }
 
+    public Account(String name, String surname, String mail, String pwd, String role) {
+        this.name = name;
+        this.surname = surname;
+        this.mail = mail;
+        this.pwd = pwd;
+        this.allowedList = List.of();
+        this.inscriptions = List.of();
+        this.tags = List.of();
+        this.archived = false;
+        this.role = role;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -86,16 +104,16 @@ public class Account {
         return pwd;
     }
 
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
     public boolean isArchived() {
         return archived;
     }
 
     public void setArchived(boolean a) {
         this.archived = a;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
     }
 
     public List<Allow> getAllowedList() {
@@ -122,7 +140,15 @@ public class Account {
         this.tags = tags;
     }
 
-//    public void addTag(Tag tag) {
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    //    public void addTag(Tag tag) {
 //        if (this.tags == null) {
 //            this.tags = new ArrayList<>();
 //        }

@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,7 @@ public class Event {
 
 
     @ManyToOne
+//    @JsonIgnore
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
@@ -31,12 +33,16 @@ public class Event {
     private boolean isArchived;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+//    @JsonIgnore
     private List<Allow> allowedAccountsList;
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    private List<Inscription> inscriptionsList;
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Tag> tags;
 
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+//    @JsonIgnore
+    private List<Inscription> inscriptionsList;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnore
+    private List<TagEvent> tagsList = new ArrayList<>();
 
     public Event() {
     }
@@ -175,12 +181,12 @@ public class Event {
         this.inscriptionsList = inscriptionsList;
     }
 
-    public List<Tag> getTags() {
-        return tags;
+    public List<TagEvent> getTagsList() {
+        return tagsList;
     }
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
+    public void setTagsList(List<TagEvent> tagsList) {
+        this.tagsList = tagsList;
     }
 
     public boolean isArchived() {
@@ -193,7 +199,8 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        if (getClass() != o.getClass()) return false;
         Event event = (Event) o;
         return id == event.id && visibility == event.visibility && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(creationDate, event.creationDate) && Objects.equals(startDate, event.startDate) && Objects.equals(endDate, event.endDate) && Objects.equals(location, event.location);
     }
