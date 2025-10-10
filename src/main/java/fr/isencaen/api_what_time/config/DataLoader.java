@@ -91,14 +91,21 @@ public class DataLoader implements ApplicationRunner {
         account.setTags(tagRepository.findAll());
         accountRepository.save(account);
 
+        Account accountAdmin = new Account("John", "Doe", "gmail@mail.com", bCryptPasswordEncoder.encode("1234"), "ROLE_ADMIN");
+//        account.addTag(tag1);
+        accountRepository.save(accountAdmin);
+//        accountAdmin.setRole("ROLE_ADMIN");
+        accountAdmin.setTags(tagRepository.findAll());
+
+
         Inscription inscription = new Inscription(account, event1);
         inscriptionRepository.save(inscription);
 
 //        Inscription inscription2 = new Inscription(account, event2);
 //        inscriptionRepository.save(inscription2);
 
-        Allow allow = new Allow(account, event2);
-        allowRepository.save(allow);
+//        Allow allow = new Allow(account, event2);
+//        allowRepository.save(allow);
 
         // Ajout de user1 (account) dans la allowlist de event1
         Allow allowEvent1 = new Allow(account, event1);

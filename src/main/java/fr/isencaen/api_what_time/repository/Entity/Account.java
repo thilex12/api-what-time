@@ -56,6 +56,18 @@ public class Account {
         this.archived = false;
     }
 
+    public Account(String name, String surname, String mail, String pwd, String role) {
+        this.name = name;
+        this.surname = surname;
+        this.mail = mail;
+        this.pwd = pwd;
+        this.allowedList = List.of();
+        this.inscriptions = List.of();
+        this.tags = List.of();
+        this.archived = false;
+        this.role = role;
+    }
+
     public int getId() {
         return id;
     }

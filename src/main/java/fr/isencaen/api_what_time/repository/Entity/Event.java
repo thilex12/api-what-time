@@ -193,7 +193,8 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        if (getClass() != o.getClass()) return false;
         Event event = (Event) o;
         return id == event.id && visibility == event.visibility && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(creationDate, event.creationDate) && Objects.equals(startDate, event.startDate) && Objects.equals(endDate, event.endDate) && Objects.equals(location, event.location);
     }

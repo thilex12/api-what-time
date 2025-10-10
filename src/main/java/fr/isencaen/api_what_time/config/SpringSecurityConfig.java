@@ -26,7 +26,8 @@ public class SpringSecurityConfig {
                             //auth.requestMatchers("/v1/accounts/test").permitAll();
                             auth.requestMatchers("/v1/accounts").permitAll();
                             auth.requestMatchers("/v1/accounts/me").hasRole("USER");
-                            auth.requestMatchers(HttpMethod.POST, "/v1/tags").hasRole("USER");
+                            auth.requestMatchers(HttpMethod.POST, "/v1/tags").hasRole("ADMIN");
+                            auth.requestMatchers(HttpMethod.DELETE, "/v1/tags").hasRole("ADMIN");
                             auth.requestMatchers(HttpMethod.GET, "/v1/tags").hasAnyRole("USER", "ADMIN");
 
                             auth.anyRequest().authenticated();

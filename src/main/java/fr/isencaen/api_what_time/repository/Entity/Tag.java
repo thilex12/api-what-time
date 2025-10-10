@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tag")
@@ -64,5 +65,17 @@ public class Tag {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return id == tag.id && Objects.equals(name, tag.name) && Objects.equals(events, tag.events) && Objects.equals(accounts, tag.accounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, events, accounts);
     }
 }
