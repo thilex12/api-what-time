@@ -16,16 +16,12 @@ public class TagEvent {
     @JoinColumn(name = "id_event", referencedColumnName = "id")
     private Event event;
 
-
-
     public TagEvent() {}
 
     public TagEvent(Tag tag, Event event, Account account) {
         this.tag = tag;
         this.event = event;
     }
-
-
 
     public Tag getTag() {
         return tag;

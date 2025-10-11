@@ -2,6 +2,7 @@ package fr.isencaen.api_what_time.repository.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,9 +26,9 @@ public class Account {
 
     //    org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: fr.isencaen.api_what_time.repository.Entity.Account.tags: could not initialize proxy - no Session
     public Account() {
-        this.allowedList = List.of();
-        this.inscriptions = List.of();
-        this.tags = List.of();
+        this.allowedList = new ArrayList<>();
+        this.inscriptions = new ArrayList<>();
+        this.tags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -37,9 +38,9 @@ public class Account {
         this.surname = surname;
         this.mail = mail;
         this.pwd = pwd;
-        this.allowedList = List.of();
-        this.inscriptions = List.of();
-        this.tags = List.of();
+        this.allowedList = new ArrayList<>();
+        this.inscriptions = new ArrayList<>();;
+        this.tags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -48,9 +49,9 @@ public class Account {
         this.surname = surname;
         this.mail = mail;
         this.pwd = pwd;
-        this.allowedList = List.of();
-        this.inscriptions = List.of();
-        this.tags = List.of();
+        this.allowedList = new ArrayList<>();
+        this.inscriptions = new ArrayList<>();
+        this.tags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -119,7 +120,13 @@ public class Account {
     }
 
     public void setTags(List<Tag> tags) {
-        this.tags = tags;
+        // Plus besoin
+    }
+    public void addTag(Tag tag){
+        this.tags.add(tag);
+    }
+    public void removeTag(Tag tag){
+        this.tags.remove(tag);
     }
 
 //    public void addTag(Tag tag) {

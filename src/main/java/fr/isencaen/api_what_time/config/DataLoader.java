@@ -32,6 +32,9 @@ public class DataLoader implements ApplicationRunner {
     AllowRepository allowRepository;
 
     @Autowired
+    FollowRepository followRepository;
+
+    @Autowired
     InscriptionRepository inscriptionRepository;
 
     @Autowired
@@ -89,7 +92,9 @@ public class DataLoader implements ApplicationRunner {
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);
         accountRepository.save(account);
-        account.setTags(tagRepository.findAll());
+        followRepository.save(new FollowTag(tag1, account));
+        //account.setTags(tagRepository.findAll());
+
 
         Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
 //        account.addTag(tag1);
