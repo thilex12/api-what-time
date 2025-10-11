@@ -22,7 +22,7 @@ public class Account {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Inscription> inscriptions;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Tag> tags;
+    private List<FollowTag> followTags;
 
     private String role;
 
@@ -30,7 +30,7 @@ public class Account {
     public Account() {
         this.allowedList = new ArrayList<>();
         this.inscriptions = new ArrayList<>();
-        this.tags = new ArrayList<>();
+        this.followTags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -42,7 +42,7 @@ public class Account {
         this.pwd = pwd;
         this.allowedList = new ArrayList<>();
         this.inscriptions = new ArrayList<>();;
-        this.tags = new ArrayList<>();
+        this.followTags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -53,7 +53,7 @@ public class Account {
         this.pwd = pwd;
         this.allowedList = new ArrayList<>();
         this.inscriptions = new ArrayList<>();
-        this.tags = new ArrayList<>();
+        this.followTags = new ArrayList<>();
         this.archived = false;
     }
 
@@ -62,9 +62,9 @@ public class Account {
         this.surname = surname;
         this.mail = mail;
         this.pwd = pwd;
-        this.allowedList = List.of();
-        this.inscriptions = List.of();
-        this.tags = List.of();
+        this.allowedList = new ArrayList<>();
+        this.inscriptions = new ArrayList<>();
+        this.followTags = new ArrayList<>();
         this.archived = false;
         this.role = role;
     }
@@ -133,18 +133,18 @@ public class Account {
         this.inscriptions = inscriptions;
     }
 
-    public List<Tag> getTags() {
-        return tags;
+    public List<FollowTag> getFollowTags() {
+        return followTags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setFollowTags(List<FollowTag> followTags) {
         // Plus besoin
     }
-    public void addTag(Tag tag){
-        this.tags.add(tag);
+    public void addFollowTag(FollowTag followTag){
+        this.followTags.add(followTag);
     }
-    public void removeTag(Tag tag){
-        this.tags.remove(tag);
+    public void removeFollowTag(FollowTag followTags){
+        this.followTags.remove(followTags);
     }
 
     public String getRole() {
