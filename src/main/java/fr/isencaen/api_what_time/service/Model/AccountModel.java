@@ -10,7 +10,7 @@ public record AccountModel(
         String surname,
         String mail,
         String pwd,
-        List<TagModel> tags,
+        List<FollowTagModel> tags,
         List<InscriptionModel> inscriptions
 ) {
     public static AccountModel of(Account account) {
@@ -20,7 +20,7 @@ public record AccountModel(
                 account.getSurname(),
                 account.getMail(),
                 account.getPwd(),
-                account.getTags().stream().map(TagModel::of).toList(),
+                account.getFollowTags().stream().map(FollowTagModel::of).toList(),
                 account.getInscriptions().stream().map(InscriptionModel::of).toList()
         );
     }

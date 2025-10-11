@@ -2,7 +2,9 @@ package fr.isencaen.api_what_time.service;
 
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
+import fr.isencaen.api_what_time.repository.Entity.FollowTag;
 import fr.isencaen.api_what_time.repository.Entity.Tag;
+import fr.isencaen.api_what_time.repository.FollowRepository;
 import fr.isencaen.api_what_time.repository.TagRepository;
 import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +31,8 @@ public class AccountService {
 
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private FollowRepository followRepository;
 
     private String reformatStrEntry(String s){
         if (s == null) return null;
@@ -47,9 +51,10 @@ public class AccountService {
         return !checkMail.isEmpty();
     }
 
-    public AccountService(AccountRepository accountRepository, TagRepository tagRepository){
+    public AccountService(AccountRepository accountRepository, TagRepository tagRepository, FollowRepository followRepository){
         this.accountRepository = accountRepository;
         this.tagRepository = tagRepository;
+        this.followRepository = followRepository;
     }
 
     public Account getUserAccount(){
@@ -146,15 +151,45 @@ public class AccountService {
         if (mail != null && !mail.isBlank()) bddAccount.setMail(updateAsked.mail());
         if (pwd != null && !pwd.isBlank()) bddAccount.setPwd(bCryptPasswordEncoder.encode(updateAsked.pwd()));
         if (tags != null){
-            List<Tag> newTags = new ArrayList<>();
+            // On liste tous les suivis de tag de l'utilisateur
+            List<FollowTag> followTagsInBDD = followRepository.findAllByAccount(bddAccount);
+
+            // On en fait une liste de tags
+            List<Tag> followTags = new ArrayList<>();
+            for(FollowTag ft : followTagsInBDD){
+                followTags.add(ft.getTag());
+            }
+
+            // Pour chacun des tags passés en paramètre de la requête
             for(int id : tags){
-                try {
+                try { // Si l'id courant existe :
+                    // On récupère le tag réel
                     Tag tag = tagRepository.findById(id).orElseThrow();
-                    newTags.add(tag);
+
+                    // On regarde si l'utilisateur suit déjà ce tag
+                    if (!followTags.contains(tag)){ // Si non, maintenant il le suit
+                        followRepository.save(new FollowTag(tag, bddAccount));
+                    }
+
+                    // On supprime le tag de la liste de ceux identifiés précedement
+                    followTags.remove(tag);
+
                 }
                 catch (NoSuchElementException e){}
             }
-            bddAccount.setTags(newTags);
+
+            // On itère sur chacun des tags identifiés comme suivis, qui n'ont pas été trouvés dans la liste en paramètre
+            for (Tag t : followTags){
+                // Pour chacun, on identifie l'enregistrement du follow correspondant
+                for(FollowTag ft : followTagsInBDD){
+                    if (t == ft.getTag()){
+                        // On supprime la ligne en mettant à jour account (dans removeFollow)
+                        ft.removeFollow();
+                        followRepository.delete(ft);
+                    }
+                }
+            }
+
         }
         return AccountModel.of(bddAccount);
     }
