@@ -2,6 +2,7 @@ package fr.isencaen.api_what_time.config;
 
 import fr.isencaen.api_what_time.repository.*;
 import fr.isencaen.api_what_time.repository.Entity.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -34,6 +35,9 @@ public class DataLoader implements ApplicationRunner {
     AllowRepository allowRepository;
 
     @Autowired
+    FollowRepository followRepository;
+
+    @Autowired
     TagEventRepository tagEventRepository;
 
     @Autowired
@@ -43,6 +47,7 @@ public class DataLoader implements ApplicationRunner {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
         Location loc1 = new Location();
@@ -97,19 +102,22 @@ public class DataLoader implements ApplicationRunner {
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);
         account.setRole("ROLE_USER");
-        account.setTags(tagRepository.findAll());
+        //account.setTags(tagRepository.findAll());
         accountRepository.save(account);
+        followRepository.save(new FollowTag(tag1, account));
+        //account.setTags(tagRepository.findAll());
+
 
         Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
 //        account.addTag(tag1);
         accountRepository.save(account2);
-        account2.setTags(tagRepository.findAll());
+        //account2.setTags(tagRepository.findAll());
 
         Account accountAdmin = new Account("John", "Doe", "gmail@mail.com", bCryptPasswordEncoder.encode("1234"), "ROLE_ADMIN");
 //        account.addTag(tag1);
         accountRepository.save(accountAdmin);
 //        accountAdmin.setRole("ROLE_ADMIN");
-        accountAdmin.setTags(tagRepository.findAll());
+        //accountAdmin.setTags(tagRepository.findAll());
 
 
         Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);

@@ -23,6 +23,11 @@ public class FollowTag {
     public FollowTag(Tag tag, Account account) {
         this.tag = tag;
         this.account = account;
+        account.addFollowTag(this);
+    }
+
+    public void removeFollow(){
+        this.account.removeFollowTag(this);
     }
 
     public int getId() {
