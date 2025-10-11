@@ -5,11 +5,13 @@ import fr.isencaen.api_what_time.repository.Entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Profile("!prod")
 @Component
 public class DataLoader implements ApplicationRunner {
 
@@ -30,6 +32,9 @@ public class DataLoader implements ApplicationRunner {
 
     @Autowired
     AllowRepository allowRepository;
+
+    @Autowired
+    TagEventRepository tagEventRepository;
 
     @Autowired
     InscriptionRepository inscriptionRepository;
@@ -68,10 +73,13 @@ public class DataLoader implements ApplicationRunner {
         event2.setVisibility(false);
         event2.setLocation(loc1);
         event2.setId_owner(2);
-        event2.setTags(tagRepository.findAll());
-
+//        event2.setTags(tagRepository.findAll());
 //        event2.setAllowedAccountsList(allowRepository.findAll());
         eventRepository.save(event2);
+
+        TagEvent tagEvent = new TagEvent(tag1, event2);
+        tagEventRepository.save(tagEvent);
+
 
         Event event3 = new Event();
         event3.setName("Event 3");
@@ -88,13 +96,21 @@ public class DataLoader implements ApplicationRunner {
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
 //        account.addTag(tag1);
-        accountRepository.save(account);
+        account.setRole("ROLE_USER");
         account.setTags(tagRepository.findAll());
+        accountRepository.save(account);
 
         Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
 //        account.addTag(tag1);
         accountRepository.save(account2);
         account2.setTags(tagRepository.findAll());
+
+        Account accountAdmin = new Account("John", "Doe", "gmail@mail.com", bCryptPasswordEncoder.encode("1234"), "ROLE_ADMIN");
+//        account.addTag(tag1);
+        accountRepository.save(accountAdmin);
+//        accountAdmin.setRole("ROLE_ADMIN");
+        accountAdmin.setTags(tagRepository.findAll());
+
 
         Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
         notifRepository.save(notif1);
@@ -114,8 +130,8 @@ public class DataLoader implements ApplicationRunner {
         Inscription inscription = new Inscription(account, event1);
         inscriptionRepository.save(inscription);
 
-        Inscription inscription2 = new Inscription(account, event2);
-        inscriptionRepository.save(inscription2);
+//        Inscription inscription2 = new Inscription(account, event2);
+//        inscriptionRepository.save(inscription2);
 
 //        Allow allow = new Allow(account, event2);
 //        allowRepository.save(allow);

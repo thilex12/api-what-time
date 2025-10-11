@@ -28,7 +28,6 @@ public class TagService {
 
     @Transactional
     public TagModel createTag(CreateTagModel tagModel) {
-//        Tag tag = new Tag(tagDto.name());
         return TagModel.of(tagRepository.save(
                 new Tag(tagModel.name())
         ));
@@ -41,4 +40,30 @@ public class TagService {
         return TagModel.of(tag);
     }
 
+    @Transactional
+    public void deleteTag(int id) {
+        Tag tag = tagRepository.findById(id).orElseThrow();
+        // Remove tag from events
+        // A FAIRE AVEC LE MERGE DE ARNAUD
+//        if (tag.getEvents() != null) {
+//            for (Event event : tag.getEvents()) {
+//                if (event.getTags() != null) {
+//                    event.getTags().remove(tag);
+//                    // Sauvegarder l'event modifié
+//                    // eventRepository.save(event); // à décommenter si eventRepository est accessible
+//                }
+//            }
+//        }
+//        // Remove tag from accounts
+//        if (tag.getAccounts() != null) {
+//            for (Account account : tag.getAccounts()) {
+//                if (account.getTags() != null) {
+//                    account.getTags().remove(tag);
+//                    // Sauvegarder l'account modifié
+//                    // accountRepository.save(account); // à décommenter si accountRepository est accessible
+//                }
+//            }
+//        }
+        tagRepository.delete(tag);
+    }
 }
