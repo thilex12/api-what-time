@@ -1,17 +1,11 @@
 package fr.isencaen.api_what_time.service;
 
-import fr.isencaen.api_what_time.repository.AccountRepository;
-import fr.isencaen.api_what_time.repository.AllowRepository;
-import fr.isencaen.api_what_time.repository.Entity.Account;
-import fr.isencaen.api_what_time.repository.Entity.Allow;
-import fr.isencaen.api_what_time.repository.Entity.Event;
-import fr.isencaen.api_what_time.repository.EventRepository;
+import fr.isencaen.api_what_time.repository.*;
+import fr.isencaen.api_what_time.repository.Entity.*;
 import fr.isencaen.api_what_time.service.Model.*;
 import fr.isencaen.api_what_time.service.NotifService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,22 +15,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EventService {
-    private final NotifService notifService;
 
-    public EventService(NotifService notifService) {
-        this.notifService = notifService;
-    }
-
-
+    @Autowired
+    NotifService notifService;
     @Autowired
     EventRepository eventRepository;
     @Autowired
     AllowRepository allowRepository;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    InscriptionRepository inscriptionRepository;
+    @Autowired
+    TagRepository tagRepository;
+    @Autowired
+    TagEventService tagEventService;
+    @Autowired
+    LocationRepository locationRepository;
 
 //    @Cacheable(cacheNames = "events")
 //    @Transactional
@@ -54,7 +53,7 @@ public class EventService {
             Account user_account = user.getAccount();
             id_user = user_account.getId();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         return eventRepository.findAll(
@@ -70,14 +69,20 @@ public class EventService {
         ).map(EventModel::of);
     }
 
-    @Cacheable(cacheNames = "events")
+    //    @Cacheable(cacheNames = "events")
     @Transactional
     public EventModel getEventById(int id) {
-        return EventModel.of(eventRepository.findById(id).orElseThrow());
+        Event eventEntity = eventRepository.findById(id).orElseThrow();
+        if (eventEntity.isArchived()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+        EventModel event = EventModel.of(eventEntity);
+        return event;
     }
 
     @Transactional
     public EventModel createEvent(CreateEventModel createEventModel) {
+        int id_owner;
 
         LocalDateTime createddate = LocalDateTime.now();
         Account user_account;
@@ -85,25 +90,45 @@ public class EventService {
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
             user_account = user.getAccount();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
+
+        Location location = null;
+        if (createEventModel.locationId() != null) {
+            location = locationRepository.findById(createEventModel.locationId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location not found"));
+        }
+
         Event event = new Event(
                 user_account.getId(),
                 createEventModel.name(),
                 createEventModel.description(),
-                createddate,
+                LocalDateTime.now(),
                 createEventModel.startDate(),
                 createEventModel.endDate(),
-                createEventModel.location(),
+                location,
                 createEventModel.visibility(),
                 false
-
         );
+        EventModel eventModel = EventModel.of(eventRepository.save(event));
+
         notifService.createNotifDel(event, user_account, LocalDateTime.now());
-        return EventModel.of(eventRepository.save(event));
+//        return EventModel.of(eventRepository.save(event));
+
+        if (createEventModel.tags() != null && !createEventModel.tags().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(createEventModel.tags());
+            if (tags.size() != createEventModel.tags().size()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "One or more tags do not exist");
+            }
+            for (Tag tag : tags) {
+                TagEvent tagEvent = new TagEvent(tag, event);
+                tagEventService.createTagEvent(TagEventModel.of(tagEvent));
+            }
+        }
+        return eventModel;
     }
 
-    @CacheEvict(cacheNames = "events")
+    //    @CacheEvict(cacheNames = "events")
     @Transactional
     public void deleteEvent(int id) {
         Account user_account;
@@ -130,7 +155,7 @@ public class EventService {
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
             user_account = user.getAccount();
         } else {
-            throw new RuntimeException("User not authenticated");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
         if (event.getId() != user_account.getId())
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to delete");
@@ -149,13 +174,100 @@ public class EventService {
 
     @Transactional
     public void addAccountToAllowedList(int eventId, int accountId) {
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
         Event event = eventRepository.findById(eventId).orElseThrow();
         var account = accountRepository.findById(accountId).orElseThrow();
+        if (event.getId_owner() != id_owner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the event owner can add allowed accounts");
+        }
+        if (event.isVisibility()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only private events can have allowed accounts list");
+        }
         Allow allow = new Allow(account, event);
         allowRepository.save(allow);
         event.getAllowedAccountsList().add(allow);
         eventRepository.save(event);
     }
 
+    @Transactional
+    public void joinEvent(int eventId) {
 
+        int id_user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_user = user_account.getId();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        var account = accountRepository.findById(id_user).orElseThrow();
+
+        if (event.getInscriptionsList().stream().anyMatch(inscriptions -> inscriptions.getAccount().getId() == id_user)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already registered to the event");
+        }
+        if (!event.isVisibility()) {
+            if (event.getAllowedAccountsList().stream().noneMatch(allow -> allow.getAccount().getId() == id_user)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not allowed to register to this event");
+            }
+        }
+        Inscription inscription = new Inscription(account, event);
+        inscriptionRepository.save(inscription);
+    }
+
+    @Transactional
+    public void leaveEvent(int eventId) {
+
+        int id_user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_user = user_account.getId();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+//        var account = accountRepository.findById(id_user);
+
+        Inscription inscription = event.getInscriptionsList().stream()
+                .filter(inscriptions -> inscriptions.getAccount().getId() == id_user)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not registered to the event"));
+
+        event.getInscriptionsList().remove(inscription);
+        inscriptionRepository.delete(inscription);
+    }
+
+    public void removeAccountFromAllowedList(int eventId, int accountId) {
+        int id_owner;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
+            Account user_account = user.getAccount();
+            id_owner = user_account.getId();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+//        var account = accountRepository.findById(accountId)
+        if (event.getId_owner() != id_owner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the event owner can remove allowed accounts");
+        }
+        Allow allow = event.getAllowedAccountsList().stream()
+                .filter(allowfilter -> allowfilter.getAccount().getId() == accountId)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not in the allowed accounts list"));
+        event.getAllowedAccountsList().remove(allow);
+        allowRepository.delete(allow);
+    }
 }

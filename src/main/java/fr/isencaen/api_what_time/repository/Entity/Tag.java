@@ -1,8 +1,10 @@
 package fr.isencaen.api_what_time.repository.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tag")
@@ -13,10 +15,14 @@ public class Tag {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Event> events;
+    //    @OneToMany(fetch = FetchType.LAZY)
+    //@JsonManagedReference
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TagEvent> tagEvents;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    //    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
     private List<Account> accounts;
 
 
@@ -48,12 +54,12 @@ public class Tag {
         this.name = name;
     }
 
-    public List<Event> getEvents() {
-        return events;
+    public List<TagEvent> getTagEvents() {
+        return tagEvents;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setTagEvents(List<TagEvent> tagEvents) {
+        this.tagEvents = tagEvents;
     }
 
     public List<Account> getAccounts() {
@@ -62,5 +68,17 @@ public class Tag {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return id == tag.id && Objects.equals(name, tag.name) && Objects.equals(tagEvents, tag.tagEvents) && Objects.equals(accounts, tag.accounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, tagEvents, accounts);
     }
 }

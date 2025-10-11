@@ -28,12 +28,14 @@ public class TagController {
         return TagDto.of(tagService.getTagById(id));
     }
 
+
     @PostMapping("v1/tags")
     @ResponseStatus(HttpStatus.CREATED)
     public TagDto createTag(
             @RequestBody CreateTagDto tag
     ) {
         return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
+
     }
 
     @PutMapping("v1/tags/{id}")
@@ -42,5 +44,12 @@ public class TagController {
             @RequestBody CreateTagDto tag
     ) {
         return TagDto.of(tagService.updateTag(id, CreateTagModel.of(tag)));
+    }
+
+    @DeleteMapping("v1/tags/{id}")
+    public void deleteTag(
+            @PathVariable int id
+    ) {
+        tagService.deleteTag(id);
     }
 }

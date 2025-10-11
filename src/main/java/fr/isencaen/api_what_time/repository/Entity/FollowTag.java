@@ -2,6 +2,8 @@ package fr.isencaen.api_what_time.repository.Entity;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "tagEvent")
 public class FollowTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +17,8 @@ public class FollowTag {
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     private Account account;
 
-    public FollowTag() {}
+    public FollowTag() {
+    }
 
     public FollowTag(Tag tag, Account account) {
         this.tag = tag;
