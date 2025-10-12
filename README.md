@@ -2,8 +2,7 @@
 
 ## Présentation
 
-API-What-Time est le backend Java Spring de l’application "What time ?". Cette application permet la gestion d’événements, de comptes utilisateurs, de notifications et de tags, avec une logique de sécurité et de gestion des droits.
-
+API-What-Time est le backend Java Spring de l’application "What time ?". Cette application permet aux utilisateurs de créer, gérer et partager des événements, privé ou public, avec des fonctionnalités avancées telles que la gestion des tags, les notifications. Ce projet est dans le cadre d'un projet d'école à l'ISEN Caen.
 ## Fonctionnalités principales
 - Création, modification, suppression d’événements
 - Gestion des tags associés aux événements
