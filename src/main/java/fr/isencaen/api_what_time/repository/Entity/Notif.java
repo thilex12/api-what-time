@@ -89,10 +89,10 @@ public class Notif {
     }
 
     public Integer getIdEvent() {
-        return idEvent;
+        return event.getId();
     }
 
     public void setIdEvent(Integer idEvent) {
-        this.idEvent = idEvent;
+        event.setId(idEvent);
     }
 }
