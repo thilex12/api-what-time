@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ValidEventDates
 public record UpdateEventDto(
@@ -24,7 +25,9 @@ public record UpdateEventDto(
         @FutureOrPresent
         LocalDateTime endDate,
 
-        Location location,
+        Integer locationId,
+
+        List<Integer> tags,
 
         @NotNull(message = "La visibilité doit etre renseignée")
         boolean visibility
@@ -37,7 +40,8 @@ public record UpdateEventDto(
                 event.description(),
                 event.startDate(),
                 event.endDate(),
-                event.location(),
+                event.locationId(),
+                event.tags(),
                 event.visibility()
         );
     }
