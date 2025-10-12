@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -177,19 +178,25 @@ public class EventService {
 
         // Mise à jour des tags
         List<TagEvent> currentTags = event.getTagsList();
-        List<Integer> newTagIds = updateEventModel.tags() != null ? updateEventModel.tags() : List.of();
+        List<Integer> newTagIds = updateEventModel.tags();
 
-        // Si la nouvelle liste de tags est vide, supprimer tous les tags de l'événement
-        if (newTagIds.isEmpty()) {
-            currentTags.forEach(tagEvent -> tagEventService.deleteTagEvent(tagEvent.getId()));
+        if (updateEventModel.tags() == null || updateEventModel.tags().isEmpty()) {
+            List<TagEvent> toRemove = new ArrayList<>(currentTags);
+            for (TagEvent tagEvent : toRemove) {
+                event.getTagsList().remove(tagEvent);
+                tagEventService.deleteTagEvent(tagEvent.getId());
+            }
         } else {
-            // Supprimer les tags qui ne sont plus dans la nouvelle liste
-            currentTags.forEach(tagEvent -> {
+            List<TagEvent> toRemove = new ArrayList<>();
+            for (TagEvent tagEvent : currentTags) {
                 if (!newTagIds.contains(tagEvent.getTag().getId())) {
-                    tagEventService.deleteTagEvent(tagEvent.getId());
+                    toRemove.add(tagEvent);
                 }
-            });
-
+            }
+            for (TagEvent tagEvent : toRemove) {
+                event.getTagsList().remove(tagEvent);
+                tagEventService.deleteTagEvent(tagEvent.getId());
+            }
             // Ajouter les nouveaux tags qui ne sont pas déjà présents
             List<Integer> currentTagIds = currentTags.stream()
                     .map(tagEvent -> tagEvent.getTag().getId())
