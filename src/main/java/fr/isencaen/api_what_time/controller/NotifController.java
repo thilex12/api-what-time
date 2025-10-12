@@ -19,7 +19,7 @@ public class NotifController {
         this.notifService = notifService;
     }
 
-    @GetMapping("v1/notif")
+    @GetMapping("v1/notifs")
     public Page<NotifDto> getAllNotifs(
             @ParameterObject Pageable pageable
     ){
@@ -27,14 +27,14 @@ public class NotifController {
          return notifService.getAllNotifs(pageable).map(NotifDto::of);
     }
 
-    @GetMapping("v1/notif/{idNotif}")
-    public NotifDto getNotif(@PathVariable int idNotif){
+    @GetMapping("v1/notifs/{idNotif}")
+    public NotifDto getNotif(@PathVariable Integer idNotif){
         NotifModel notif = notifService.getNotif(idNotif);
         if (notif == null) return null;
         return NotifDto.of(notif);
     }
 
-    @DeleteMapping ("v1/notif/{idNotif}")
+    @DeleteMapping ("v1/notifs/{idNotif}")
     public NotifDto deleteNotif(@PathVariable int idNotif){
         NotifModel notif = notifService.deleteNotif(idNotif);
         if (notif == null) return null;

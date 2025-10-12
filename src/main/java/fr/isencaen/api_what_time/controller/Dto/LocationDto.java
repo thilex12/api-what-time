@@ -8,8 +8,8 @@ public record LocationDto(
 
         @NotBlank(message = "Le nom doit etre renseigné")
         String name,
-        double latitude,
-        double longitude,
+        Double latitude,
+        Double longitude,
         String description
 ) {
     public static LocationDto of(LocationModel location) {

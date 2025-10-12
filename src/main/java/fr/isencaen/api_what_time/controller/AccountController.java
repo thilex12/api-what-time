@@ -61,10 +61,4 @@ public class AccountController {
         return OtherAccountDto.of(account);
     }
 
-    // Uniquement pour débug
-    @Profile("!prod")
-    @GetMapping("v1/accounts/test")
-    public List<Integer> testRoad() {
-        return List.of();
-    }
 }

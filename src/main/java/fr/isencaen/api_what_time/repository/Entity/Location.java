@@ -17,6 +17,7 @@ public class Location {
     private double latitude;
     private double longitude;
     private String description;
+    private boolean archived;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Event> event;
@@ -29,6 +30,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.archived = false;
     }
 
     public Location(int id, String name, double latitude, double longitude, String description) {
@@ -37,6 +39,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.archived = false;
     }
 
 
@@ -79,6 +82,9 @@ public class Location {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public boolean isArchived(){return this.archived;}
+    public void setArchived(boolean value){this.archived = value;}
 
     @Override
     public boolean equals(Object o) {
