@@ -31,4 +31,9 @@ public class TagEventService {
                 )
         ));
     }
+
+    @Transactional
+    public void deleteTagEvent(int id) {
+        tagEventRepository.deleteById(id);
+    }
 }
