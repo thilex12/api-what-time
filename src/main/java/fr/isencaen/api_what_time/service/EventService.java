@@ -140,8 +140,9 @@ public class EventService {
         } else {
             throw new RuntimeException("User not authenticated");
         }
-        if (event.getId() != user_account.getId())
+        if (event.getId_owner() != user_account.getId()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to delete");
+        }
 
         notifService.createNotifDel(event, user_account, LocalDateTime.now());
         event.setArchived(true);
