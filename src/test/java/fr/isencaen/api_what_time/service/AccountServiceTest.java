@@ -2,7 +2,6 @@ package fr.isencaen.api_what_time.service;
 
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
-import fr.isencaen.api_what_time.repository.Entity.FollowTag;
 import fr.isencaen.api_what_time.repository.Entity.Tag;
 import fr.isencaen.api_what_time.repository.FollowRepository;
 import fr.isencaen.api_what_time.repository.TagRepository;
@@ -10,8 +9,6 @@ import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import fr.isencaen.api_what_time.service.Model.FollowTagModel;
 import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
