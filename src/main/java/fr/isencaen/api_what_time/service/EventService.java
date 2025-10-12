@@ -157,17 +157,53 @@ public class EventService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
-        if (event.getId() != user_account.getId())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to delete");
+        // Correction : vérification sur le propriétaire de l'événement
+        if (event.getId_owner() != user_account.getId())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorized to update");
 
         notifService.createNotifModif(event, user_account, LocalDateTime.now());
-
 
         event.setName(updateEventModel.name());
         event.setDescription(updateEventModel.description());
         event.setStartDate(updateEventModel.startDate());
         event.setEndDate(updateEventModel.endDate());
-        event.setLocation(updateEventModel.location());
+        // Correction : gestion propre de la localisation
+        if (updateEventModel.locationId() != null) {
+            event.setLocation(locationRepository.findById(updateEventModel.locationId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location not found")));
+        } else {
+            event.setLocation(null);
+        }
+
+        // Mise à jour des tags
+        List<TagEvent> currentTags = event.getTagsList();
+        List<Integer> newTagIds = updateEventModel.tags() != null ? updateEventModel.tags() : List.of();
+
+        // Si la nouvelle liste de tags est vide, supprimer tous les tags de l'événement
+        if (newTagIds.isEmpty()) {
+            currentTags.forEach(tagEvent -> tagEventService.deleteTagEvent(tagEvent.getId()));
+        } else {
+            // Supprimer les tags qui ne sont plus dans la nouvelle liste
+            currentTags.forEach(tagEvent -> {
+                if (!newTagIds.contains(tagEvent.getTag().getId())) {
+                    tagEventService.deleteTagEvent(tagEvent.getId());
+                }
+            });
+
+            // Ajouter les nouveaux tags qui ne sont pas déjà présents
+            List<Integer> currentTagIds = currentTags.stream()
+                    .map(tagEvent -> tagEvent.getTag().getId())
+                    .toList();
+            for (Integer tagId : newTagIds) {
+                if (!currentTagIds.contains(tagId)) {
+                    Tag tag = tagRepository.findById(tagId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag not found"));
+                    TagEvent tagEvent = new TagEvent(tag, event);
+                    tagEventService.createTagEvent(TagEventModel.of(tagEvent));
+                }
+            }
+        }
+
         event.setVisibility(updateEventModel.visibility());
         return EventModel.of(event);
     }

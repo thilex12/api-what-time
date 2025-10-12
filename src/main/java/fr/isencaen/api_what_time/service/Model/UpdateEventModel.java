@@ -4,13 +4,15 @@ import fr.isencaen.api_what_time.controller.Dto.UpdateEventDto;
 import fr.isencaen.api_what_time.repository.Entity.Location;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record UpdateEventModel(
         String name,
         String description,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        Location location,
+        Integer locationId,
+        List<Integer> tags,
         boolean visibility
 
 ) {
@@ -21,7 +23,8 @@ public record UpdateEventModel(
                 event.description(),
                 event.startDate(),
                 event.endDate(),
-                event.location(),
+                event.locationId(),
+                event.tags(),
                 event.visibility()
         );
     }
