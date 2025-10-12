@@ -11,7 +11,8 @@ public record AccountModel(
         String mail,
         String pwd,
         List<FollowTagModel> tags,
-        List<InscriptionModel> inscriptions
+        List<InscriptionModel> inscriptions,
+        boolean archived
 ) {
     public static AccountModel of(Account account) {
         return new AccountModel(
@@ -21,7 +22,8 @@ public record AccountModel(
                 account.getMail(),
                 account.getPwd(),
                 account.getFollowTags().stream().map(FollowTagModel::of).toList(),
-                account.getInscriptions().stream().map(InscriptionModel::of).toList()
+                account.getInscriptions().stream().map(InscriptionModel::of).toList(),
+                account.isArchived()
         );
     }
 }
