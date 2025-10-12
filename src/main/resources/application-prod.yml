@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     password: password
-    url: 'jdbc:h2:mem:whattimedb'
+    url: 'jdbc:postgresql://localhost:XXX:whattimedb'
     username: sa
 
   logging:
