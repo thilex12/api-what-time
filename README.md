@@ -29,3 +29,8 @@ API-What-Time est le backend Java Spring de l’application "What time ?". Cette
 3. Lancer l’application :
 4. Accéder à l’API sur `http://localhost:8080`
 5. Accéder au SWAGGER `http://localhost:8080/swagger-ui/index.html#/`
+
+## Auteurs
+- [BAYARD Jean]()
+- [PEYRACHE Arnaud]()
+- [GUERRIER Alexandre]()
