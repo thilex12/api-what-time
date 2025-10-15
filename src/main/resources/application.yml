@@ -12,6 +12,13 @@ spring:
     password: ajaja
     driver-class-name: org.postgresql.Driver
 
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
   logging:
     level:
       root: DEBUG

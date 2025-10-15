@@ -20,7 +20,7 @@ public class Location {
     private String description;
     private boolean archived;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     private List<Event> event;
 
     public Location() {
