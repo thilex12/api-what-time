@@ -95,6 +95,7 @@ public class AccountService {
     }
 
     // Créé un compte à partir d'un model donné
+    @Transactional
     public AccountModel createAccount(CreateAccountModel createAccountModel){
         String name, surname, mail, pwd;
         name = reformatStrEntry(createAccountModel.name());
