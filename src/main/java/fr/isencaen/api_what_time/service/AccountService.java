@@ -117,7 +117,7 @@ public class AccountService {
         }
 
         return AccountModel.of(
-                accountRepository.save(new Account(name, surname, mail, bCryptPasswordEncoder.encode(pwd)))
+                accountRepository.save(new Account(name, surname, mail, bCryptPasswordEncoder.encode(pwd), "ROLE_USER"))
         );
     }
 

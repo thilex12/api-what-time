@@ -105,10 +105,10 @@ public class DataLoader implements ApplicationRunner {
         //account.setTags(tagRepository.findAll());
         accountRepository.save(account);
         followRepository.save(new FollowTag(tag1, account));
-        //account.setTags(tagRepository.findAll());
+        //account.setTags(tagRepository.findAll());s
 
 
-        Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"));
+        Account account2 = new Account("Henri", "Poincaré", "henri.care@gmail.com", bCryptPasswordEncoder.encode("4321"), "ROLE_USER");
 //        account.addTag(tag1);
         accountRepository.save(account2);
         //account2.setTags(tagRepository.findAll());

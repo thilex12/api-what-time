@@ -8,6 +8,7 @@ public record LocationDto(
 
         @NotBlank(message = "Le nom doit etre renseigné")
         String name,
+        String address,
         Double latitude,
         Double longitude,
         String description
@@ -19,6 +20,7 @@ public record LocationDto(
         return new LocationDto(
                 location.id(),
                 location.name(),
+                location.address(),
                 location.latitude(),
                 location.longitude(),
                 location.description()

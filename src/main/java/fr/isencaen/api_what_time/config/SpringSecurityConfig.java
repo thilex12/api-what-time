@@ -1,5 +1,6 @@
 package fr.isencaen.api_what_time.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -44,7 +46,16 @@ public class SpringSecurityConfig {
                         }
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults()).build();
+                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(customEntryPoint())).build();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint customEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+        };
     }
 
     @Bean

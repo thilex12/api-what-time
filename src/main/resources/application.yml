@@ -1,12 +1,17 @@
 spring:
   application:
     name: api-what-time
+#  datasource:
+  #    driver-class-name: org.h2.Driver
+  #    password: password
+  #    url: 'jdbc:h2:mem:whattimedb'
+  #    username: sa
   datasource:
-    driver-class-name: org.h2.Driver
-    password: password
-    url: 'jdbc:h2:mem:whattimedb'
-    username: sa
+    url: jdbc:postgresql://postgres:5432/whattimedb
+    username: aja
+    password: ajaja
+    driver-class-name: org.postgresql.Driver
 
   logging:
     level:
-      root: INFO
+      root: DEBUG
