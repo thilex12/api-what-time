@@ -272,23 +272,22 @@ public class EventService {
     public void leaveEvent(int eventId) {
 
         int id_user;
+        Account user_account;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated() && auth.getPrincipal() instanceof AccountPrincipal user) {
-            Account user_account = user.getAccount();
+            user_account = user.getAccount();
             id_user = user_account.getId();
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
 
         Event event = eventRepository.findById(eventId).orElseThrow();
-//        var account = accountRepository.findById(id_user);
 
-        Inscription inscription = event.getInscriptionsList().stream()
-                .filter(inscriptions -> inscriptions.getAccount().getId() == id_user)
+        Inscription inscription = inscriptionRepository.findAll().stream()
+                .filter(inscriptions -> inscriptions.getAccount().getId() == id_user && inscriptions.getEvent().getId() == eventId)
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not registered to the event"));
 
-        event.getInscriptionsList().remove(inscription);
         inscriptionRepository.delete(inscription);
     }
 
