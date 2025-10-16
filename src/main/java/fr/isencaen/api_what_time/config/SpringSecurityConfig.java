@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,9 +29,9 @@ public class SpringSecurityConfig {
                             auth.requestMatchers("/v1/accounts/me").hasAnyRole("USER", "ADMIN");
 
                             auth.requestMatchers("/v1/locations").hasAnyRole("USER", "ADMIN");
-                            auth.requestMatchers(HttpMethod.POST, "/v1/locations").hasRole("ADMIN");
-                            auth.requestMatchers(HttpMethod.PUT, "/v1/locations").hasRole("ADMIN");
-                            auth.requestMatchers(HttpMethod.DELETE, "/v1/locations").hasRole("ADMIN");
+                            auth.requestMatchers(HttpMethod.POST, "/v1/locations").hasAnyRole("USER", "ADMIN");
+                            auth.requestMatchers(HttpMethod.PUT, "/v1/locations").hasAnyRole("USER", "ADMIN");
+                            auth.requestMatchers(HttpMethod.DELETE, "/v1/locations").hasAnyRole("USER", "ADMIN");
 
                             auth.requestMatchers("/v1/notifications").hasAnyRole("USER", "ADMIN");
 
