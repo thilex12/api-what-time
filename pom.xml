@@ -97,7 +97,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <imageName>thilex12/what-time:1.11</imageName>
+                    <imageName>thilex12/what-time:1.12</imageName>
                 </configuration>
 			</plugin>
 		</plugins>

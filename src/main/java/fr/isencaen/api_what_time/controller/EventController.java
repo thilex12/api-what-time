@@ -81,8 +81,8 @@ public class EventController {
     @PostMapping(value = "v1/events", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
-            @RequestBody CreateEventDto createEventDto
-//            @Valid @RequestBody CreateEventDto createEventDto
+//            @RequestBody CreateEventDto createEventDto
+            @Valid @RequestBody CreateEventDto createEventDto
     ) {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
 //        return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
@@ -110,7 +110,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateEvent(
             @PathVariable int id,
-            @RequestBody UpdateEventDto updateEventDto
+            @Valid @RequestBody UpdateEventDto updateEventDto
     ) {
         return EventDto.of(eventService.updateEvent(id, UpdateEventModel.of(updateEventDto)));
     }
