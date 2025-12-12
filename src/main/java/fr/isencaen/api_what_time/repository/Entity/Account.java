@@ -17,11 +17,11 @@ public class Account {
     private String pwd;
     private boolean archived;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
     private List<Allow> allowedList;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
     private List<Inscription> inscriptions;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account")
     private List<FollowTag> followTags;
 
     private String role;
@@ -153,6 +153,13 @@ public class Account {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void addInscription(Inscription inscription) {
+        this.inscriptions.add(inscription);
+    }
+    public void removeInscription(Inscription inscription) {
+        this.inscriptions.remove(inscription);
     }
 
     //    public void addTag(Tag tag) {

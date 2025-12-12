@@ -23,7 +23,14 @@ public class Inscription {
     public Inscription(Account account, Event event) {
         this.account = account;
         this.event = event;
+        account.addInscription(this);
     }
+
+//    public Insription(int id, Account account, Event event) {
+//        this.id = id;
+//        this.account = account;
+//        this.event = event;
+//    }
 
     public Account getAccount() {
         return account;

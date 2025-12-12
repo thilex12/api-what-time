@@ -14,12 +14,13 @@ public class Location {
     private int id;
 
     private String name;
+    private String address;
     private double latitude;
     private double longitude;
     private String description;
     private boolean archived;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     private List<Event> event;
 
     public Location() {
@@ -31,6 +32,24 @@ public class Location {
         this.longitude = longitude;
         this.description = description;
         this.archived = false;
+    }
+
+    public Location(String name, String address, double latitude, double longitude, String description) {
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.archived = false;
+    }
+
+    public Location(String name, String address, double latitude, double longitude, String description, boolean archived) {
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.archived = archived;
     }
 
     public Location(int id, String name, double latitude, double longitude, String description) {
@@ -85,6 +104,14 @@ public class Location {
 
     public boolean isArchived(){return this.archived;}
     public void setArchived(boolean value){this.archived = value;}
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     @Override
     public boolean equals(Object o) {

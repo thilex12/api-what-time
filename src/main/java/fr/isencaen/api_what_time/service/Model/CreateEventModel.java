@@ -3,6 +3,7 @@ package fr.isencaen.api_what_time.service.Model;
 import fr.isencaen.api_what_time.controller.Dto.CreateEventDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public record CreateEventModel(
@@ -23,7 +24,8 @@ public record CreateEventModel(
                 event.endDate(),
                 event.locationId(),
                 event.visibility(),
-                event.tags() != null ? event.tags() : List.of()
+                event.tags()
+//                event.tags() != null ? event.tags() : new ArrayList<>()
         );
     }
 
