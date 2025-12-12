@@ -261,4 +261,10 @@ public class AccountService {
         }
     }
 
+    public String getAccountRoles(){
+        Account userAccount = getUserAccount();
+        if (userAccount == null) return null;
+        return userAccount.getRole();
+    }
+
 }
