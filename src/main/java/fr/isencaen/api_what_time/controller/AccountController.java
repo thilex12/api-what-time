@@ -23,6 +23,12 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @GetMapping("v1/admin-accounts")
+    public List<OtherAccountDto> getAllAccounts() {
+        List<AccountModel> accounts = accountService.getAllAccounts();
+        return accounts.stream().map(OtherAccountDto::of).toList();
+    }
+
     @GetMapping("v1/accounts/me")
     public AccountDto login() {
         AccountModel userModel = accountService.getUserModel();
