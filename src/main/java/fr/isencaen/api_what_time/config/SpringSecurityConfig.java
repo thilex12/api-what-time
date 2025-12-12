@@ -55,6 +55,7 @@ public class SpringSecurityConfig {
                     config.setAllowedOrigins(Arrays.asList(
                             "http://localhost:3000",
                             "http://localhost:8080",
+                            "http://localhost:4200",
                             "https://api.thilex.net"));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("*"));
