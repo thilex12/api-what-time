@@ -57,7 +57,7 @@ public class EventController {
         ).map(EventDto::of);
     }
 
-    @GetMapping("v1/admin-events/")
+    @GetMapping("v1/admin-events")
     public Page<EventDto> getAdminEvents(
             @ParameterObject Pageable pageable
 //            @ParameterObject EventFilterDto eventFilter
