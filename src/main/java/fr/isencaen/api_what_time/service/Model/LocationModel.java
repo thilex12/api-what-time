@@ -5,6 +5,7 @@ import fr.isencaen.api_what_time.repository.Entity.Location;
 public record LocationModel(
         int id,
         String name,
+        String address,
         double latitude,
         double longitude,
         String description
@@ -16,6 +17,7 @@ public record LocationModel(
         return new LocationModel(
                 location.getId(),
                 location.getName(),
+                location.getAddress(),
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getDescription()

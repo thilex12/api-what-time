@@ -7,14 +7,14 @@ import fr.isencaen.api_what_time.repository.Entity.Tag;
 
 public record InscriptionModel (
             int id,
-            Account account,
-            Event event
+            int accountId,
+            int eventId
     ) {
         public static InscriptionModel of(Inscription inscription) {
             return new InscriptionModel(
                     inscription.getId(),
-                    inscription.getAccount(),
-                    inscription.getEvent()
+                    inscription.getAccount().getId(),
+                    inscription.getEvent().getId()
             );
         }
     }
