@@ -36,7 +36,9 @@ public record CreateEventDto(
                 event.endDate(),
                 event.locationId() != null ? event.locationId() : null,
                 event.visibility(),
-                new ArrayList<>(event.tags())
+//                new ArrayList<>(event.tags())
+//                event.tags() != null ? event.tags() : new ArrayList<>()
+                event.tags()
         );
     }
 }
