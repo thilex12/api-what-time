@@ -40,7 +40,8 @@ public class SpringSecurityConfig {
 
                             auth.requestMatchers("/v1/accounts/me").hasAnyRole("USER", "ADMIN");
                             auth.requestMatchers("/v1/events").hasAnyRole("USER", "ADMIN");
-                            auth.requestMatchers(HttpMethod.GET, "v1/admin-events/").hasRole("ADMIN");
+                            auth.requestMatchers(HttpMethod.GET, "v1/admin-events").hasRole("ADMIN");
+                            auth.requestMatchers(HttpMethod.GET, "v1/admin-accounts").hasRole("ADMIN");
                             auth.requestMatchers(HttpMethod.POST, "/v1/tags").hasRole("ADMIN");
                             auth.requestMatchers(HttpMethod.DELETE, "/v1/tags").hasRole("ADMIN");
                             auth.requestMatchers(HttpMethod.GET, "/v1/tags").hasAnyRole("USER", "ADMIN");
@@ -51,8 +52,12 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource( configBis -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("*"));
-                    config.setAllowedMethods(Arrays.asList("*"));
+                    config.setAllowedOrigins(Arrays.asList(
+                            "http://localhost:3000",
+                            "http://localhost:8080",
+                            "http://localhost:4200",
+                            "https://api.thilex.net"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("*"));
                     return config;
         }))
