@@ -5,6 +5,7 @@ import fr.isencaen.api_what_time.controller.Dto.CreateEventDto;
 import fr.isencaen.api_what_time.controller.Dto.EventDto;
 import fr.isencaen.api_what_time.controller.Dto.EventFilterDto;
 import fr.isencaen.api_what_time.controller.Dto.UpdateEventDto;
+import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
@@ -30,7 +31,11 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+    @Autowired
+    private AccountService accountService;
 
+
+//    @GetMapping("v1/events")
 
     @Operation(summary = "Retounre la liste des évenements", description = "Permet de filtrer les évenements par nom, date, lieu et tag")
     @ApiResponses(value = {
@@ -44,10 +49,22 @@ public class EventController {
             @ParameterObject Pageable pageable,
             @ParameterObject EventFilterDto eventFilter
     ) {
+//        Si l'utilisateur est juste USER on fait getEvents, si ADMIN on fait getAllEvents
 
         return eventService.getEvents(
                 pageable,
                 EventFilterModel.of(eventFilter)
+        ).map(EventDto::of);
+    }
+
+    @GetMapping("v1/admin-events/")
+    public Page<EventDto> getAdminEvents(
+            @ParameterObject Pageable pageable
+//            @ParameterObject EventFilterDto eventFilter
+    ) {
+        return eventService.getAllEvents(
+                pageable
+//                EventFilterModel.of(eventFilter)
         ).map(EventDto::of);
     }
 
@@ -81,8 +98,8 @@ public class EventController {
     @PostMapping(value = "v1/events", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto createEvent(
-            @RequestBody CreateEventDto createEventDto
-//            @Valid @RequestBody CreateEventDto createEventDto
+//            @RequestBody CreateEventDto createEventDto
+            @Valid @RequestBody CreateEventDto createEventDto
     ) {
         return EventDto.of(eventService.createEvent(CreateEventModel.of(createEventDto)));
 //        return TagDto.of(tagService.createTag(CreateTagModel.of(tag)));
@@ -110,7 +127,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateEvent(
             @PathVariable int id,
-            @RequestBody UpdateEventDto updateEventDto
+            @Valid @RequestBody UpdateEventDto updateEventDto
     ) {
         return EventDto.of(eventService.updateEvent(id, UpdateEventModel.of(updateEventDto)));
     }

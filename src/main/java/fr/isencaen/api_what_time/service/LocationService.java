@@ -44,8 +44,10 @@ public class LocationService {
         }
     }
 
+    @Transactional
     public LocationModel createLocation(LocationDto locDto){
         String name = locDto.name();
+        String address = locDto.address();
         Double latitude = locDto.longitude();
         Double longitude = locDto.latitude();
         String description = locDto.description();
@@ -55,7 +57,7 @@ public class LocationService {
         description = description.strip();
         if (name.isBlank()) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
 
-        Location loc = new Location(name, longitude, latitude, description);
+        Location loc = new Location(name, address, longitude, latitude, description);
         locationRepository.save(loc);
         return LocationModel.of(loc);
     }
@@ -74,6 +76,7 @@ public class LocationService {
         }
 
         String name = locDto.name();
+        String address = locDto.address();
         Double latitude = locDto.longitude();
         Double longitude = locDto.latitude();
         String description = locDto.description();
@@ -85,6 +88,7 @@ public class LocationService {
         if (latitude != null) loc.setLatitude(latitude);
         if (longitude != null) loc.setLongitude(longitude);
         if (description != null) loc.setDescription(description);
+        if (address != null) loc.setAddress(address);
 
         return LocationModel.of(loc);
     }

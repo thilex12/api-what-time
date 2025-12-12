@@ -3,8 +3,10 @@ package fr.isencaen.api_what_time.service;
 import fr.isencaen.api_what_time.repository.AccountRepository;
 import fr.isencaen.api_what_time.repository.Entity.Account;
 import fr.isencaen.api_what_time.repository.Entity.FollowTag;
+import fr.isencaen.api_what_time.repository.Entity.Inscription;
 import fr.isencaen.api_what_time.repository.Entity.Tag;
 import fr.isencaen.api_what_time.repository.FollowRepository;
+import fr.isencaen.api_what_time.repository.InscriptionRepository;
 import fr.isencaen.api_what_time.repository.TagRepository;
 import fr.isencaen.api_what_time.service.Model.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,6 +35,9 @@ public class AccountService {
     private TagRepository tagRepository;
     @Autowired
     private FollowRepository followRepository;
+
+    @Autowired
+    InscriptionRepository inscriptionRepository;
 
     public String reformatStrEntry(String s, boolean lower){
         if (s == null) return null;
@@ -70,7 +75,13 @@ public class AccountService {
 
     // Génère un AccountModel à partir du compte de l'utilisateur connecté
     public AccountModel getUserModel(){
-        return AccountModel.of(getUserAccount());
+        Account principalAccount = getUserAccount();
+        if (principalAccount == null) return null;
+        // Recharger depuis la BDD pour s'assurer que les collections (inscriptions, followTags) sont à jour
+        Account bddAccount = accountRepository.findById(principalAccount.getId()).orElse(null);
+        if (bddAccount == null) return null;
+        return AccountModel.of(bddAccount);
+//        return AccountModel.of(principalAccount);
     }
 
     // Récupère le compte d'un utilisateur donné (via ID)
@@ -95,6 +106,7 @@ public class AccountService {
     }
 
     // Créé un compte à partir d'un model donné
+    @Transactional
     public AccountModel createAccount(CreateAccountModel createAccountModel){
         String name, surname, mail, pwd;
         name = reformatStrEntry(createAccountModel.name());
@@ -116,7 +128,7 @@ public class AccountService {
         }
 
         return AccountModel.of(
-                accountRepository.save(new Account(name, surname, mail, bCryptPasswordEncoder.encode(pwd)))
+                accountRepository.save(new Account(name, surname, mail, bCryptPasswordEncoder.encode(pwd), "ROLE_USER"))
         );
     }
 
@@ -162,6 +174,33 @@ public class AccountService {
             }
         }
     }
+
+//    @Transactional
+//    public void joinEvent(Account account, int eventId){
+//        Account bddAccount;
+//        try{
+//            // Cas où le compte demandé n'existe pas (peu probable)
+//            bddAccount = accountRepository.findById(account.getId()).orElseThrow();
+//
+//            inscriptionRepository.save(new Inscription(bddAccount, ));
+//
+//        }
+//        catch (EntityNotFoundException e){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account doesn't match");
+//        }
+//    }
+//
+//    @Transactional
+//    public void leaveEvent(Account account, int eventId){
+//        Account bddAccount;
+//        try{
+//            // Cas où le compte demandé n'existe pas (peu probable)
+//            bddAccount = accountRepository.findById(account.getId()).orElseThrow();
+//        }
+//        catch (EntityNotFoundException e){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account doesn't match");
+//        }
+//    }
 
     // Mets à jour les informations du compte de l'utilisateur connecté, à partir d'un model groupant les changements
     @Transactional
@@ -220,6 +259,12 @@ public class AccountService {
         catch (EntityNotFoundException e){
             return null;
         }
+    }
+
+    public String getAccountRoles(){
+        Account userAccount = getUserAccount();
+        if (userAccount == null) return null;
+        return userAccount.getRole();
     }
 
 }

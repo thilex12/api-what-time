@@ -6,14 +6,14 @@ import fr.isencaen.api_what_time.service.Model.InscriptionModel;
 
 public record InscriptionDto(
         int id,
-        AccountDto account,
-        EventDto event
+        int accountId,
+        int eventId
 ) {
     public static InscriptionDto of(InscriptionModel inscriptionModel) {
         return new InscriptionDto(
                 inscriptionModel.id(),
-                AccountDto.of(AccountModel.of(inscriptionModel.account())),
-                EventDto.of(EventModel.of(inscriptionModel.event()))
+                inscriptionModel.accountId(),
+                inscriptionModel.eventId()
         );
     }
 
