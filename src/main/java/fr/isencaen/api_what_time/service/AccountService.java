@@ -105,6 +105,10 @@ public class AccountService {
         }
     }
 
+    public List<AccountModel> getAllAccounts(){
+        return accountRepository.findAll().stream().map(AccountModel::of).toList();
+    }
+
     // Créé un compte à partir d'un model donné
     @Transactional
     public AccountModel createAccount(CreateAccountModel createAccountModel){
