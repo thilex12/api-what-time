@@ -52,8 +52,11 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource( configBis -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("*"));
-                    config.setAllowedMethods(Arrays.asList("*"));
+                    config.setAllowedOrigins(Arrays.asList(
+                            "http://localhost:3000",
+                            "http://localhost:8080",
+                            "https://api.thilex.net"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("*"));
                     return config;
         }))
