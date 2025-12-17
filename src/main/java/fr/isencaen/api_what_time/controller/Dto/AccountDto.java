@@ -10,7 +10,8 @@ public record AccountDto(
         String surname,
         String mail,
         List<FollowTagDto> followTags,
-        List<InscriptionDto> inscriptions
+        List<InscriptionDto> inscriptions,
+        String role
 ) {
     public static AccountDto of(AccountModel account) {
         return new AccountDto(
@@ -19,7 +20,8 @@ public record AccountDto(
                 account.surname(),
                 account.mail(),
                 account.tags().stream().map(FollowTagDto::of).toList(),
-                account.inscriptions().stream().map(InscriptionDto::of).toList()
+                account.inscriptions().stream().map(InscriptionDto::of).toList(),
+                account.role()
         );
     }
 }

@@ -58,7 +58,7 @@ public class AccountControllerTest {
         Assertions.assertEquals(200, response.getStatus());
 
         // On vérifie l'élément
-        Assertions.assertEquals(new AccountDto(accountUser.getId(), accountUser.getName(), accountUser.getSurname(), accountUser.getMail(), List.of(), List.of()), result);
+        Assertions.assertEquals(new AccountDto(accountUser.getId(), accountUser.getName(), accountUser.getSurname(), accountUser.getMail(), List.of(), List.of(), accountUser.getRole()), result);
     }
 
     @Test
@@ -104,7 +104,8 @@ public class AccountControllerTest {
                 toto.pwd(),
                 List.of(),
                 List.of(),
-                false
+                false,
+                "ROLE_USER"
         ));
         String body = """
         {
@@ -129,7 +130,7 @@ public class AccountControllerTest {
         Assertions.assertEquals(201, response.getStatus());
 
         // On vérifie que l'élément'
-        Assertions.assertEquals(new AccountDto(1, toto.name(), toto.surname(), toto.mail(), List.of(), List.of()), result);
+        Assertions.assertEquals(new AccountDto(1, toto.name(), toto.surname(), toto.mail(), List.of(), List.of(), "ROLE_USER"), result);
     }
 
     @Test
@@ -154,7 +155,8 @@ public class AccountControllerTest {
                 toto.pwd(),
                 List.of(new FollowTagModel(ft.id(), ft.tagId(), ft.accountId(), ft.nameTag())),
                 List.of(),
-                false
+                false,
+                "ROLE_USER"
         ));
         String body = """
         {
@@ -177,7 +179,7 @@ public class AccountControllerTest {
         Assertions.assertEquals(201, response.getStatus());
 
         // On vérifie que l'élément'
-        Assertions.assertEquals(new AccountDto(1, "Bruno", toto.surname(), toto.mail(), List.of(ft), List.of()), result);
+        Assertions.assertEquals(new AccountDto(1, "Bruno", toto.surname(), toto.mail(), List.of(ft), List.of(), "ROLE_USER"), result);
     }
 
     @Test
@@ -189,6 +191,7 @@ public class AccountControllerTest {
                 "toto.famille@gmail.com",
                 "12345"
         );
+        toto.setRole("ROLE_USER");
 
         // Modifie le retour du service utilisée par la requête que l'on va appeler
         Mockito.when(accountService.deleteAccount()).thenReturn(new AccountModel(
@@ -199,7 +202,8 @@ public class AccountControllerTest {
                 toto.getPwd(),
                 List.of(),
                 List.of(),
-                false
+                false,
+                "ROLE_USER"
         ));
 
         // Fais la requête
@@ -216,7 +220,7 @@ public class AccountControllerTest {
         Assertions.assertEquals(201, response.getStatus());
 
         // On vérifie l'élément
-        Assertions.assertEquals(new AccountDto(toto.getId(), toto.getName(), toto.getSurname(), toto.getMail(), List.of(), List.of()), result);
+        Assertions.assertEquals(new AccountDto(toto.getId(), toto.getName(), toto.getSurname(), toto.getMail(), List.of(), List.of(), toto.getRole()), result);
     }
 
 }
