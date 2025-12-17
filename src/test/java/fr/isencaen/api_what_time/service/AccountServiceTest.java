@@ -43,6 +43,8 @@ public class AccountServiceTest {
                 "mail@gmail.com",
                 "1234"
         );
+//        createAccountModel.
+
         String name, surname, mail, pwd;
         name = accountService.reformatStrEntry(createAccountModel.name());
         surname = accountService.reformatStrEntry(createAccountModel.surname());
@@ -67,7 +69,8 @@ public class AccountServiceTest {
                         createAccountModel.pwd(),
                         List.of(),
                         List.of(),
-                        false
+                        false,
+                        null
                 )
         );
     }
@@ -134,8 +137,8 @@ public class AccountServiceTest {
                     bddAccount.getPwd(),
                     List.of(followTagModel),
                     List.of(),
-                    false
-                )
+                    false,
+                    null                )
         );
 
     }
@@ -160,7 +163,8 @@ public class AccountServiceTest {
                         account.getPwd(),
                         List.of(),
                         List.of(),
-                        true
+                        true,
+                        null
                 ));
     }
 
