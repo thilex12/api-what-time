@@ -1,14 +1,16 @@
 name: Deploy et docker
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+  workflow_run:
+    workflows: ["CI - Build & Test"]
+    types:
+      - completed
     branches: [ "main" ]
 
 jobs:
     deploy-docker:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         steps:
           - name: Checkout
@@ -25,7 +27,7 @@ jobs:
             run: mvn clean install -DskipTests=true
 
           - name: package the application
-            run: mvn package
+            run: mvn package -DskipTests
 
           - name: Extract version from pom.xml
             id: extract_version
