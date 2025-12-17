@@ -2,9 +2,9 @@ name: Deploy et docker
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
 
 jobs:
     deploy-docker:
@@ -21,8 +21,8 @@ jobs:
               java-version: "25"
               cache: maven
 
-#          - name : Clean and install dependencies
-#            run: mvn clean install -DskipTests=true
+          - name : Clean and install dependencies
+            run: mvn clean install -DskipTests=true
 
           - name: package the application
             run: mvn package
