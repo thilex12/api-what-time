@@ -2,7 +2,7 @@ FROM eclipse-temurin:25-jdk-alpine
 
 WORKDIR /app
 
-COPY target/api-what-time-1.0.jar app.jar
+COPY target/api-what-time-*.jar app.jar
 
 EXPOSE 8080
 
