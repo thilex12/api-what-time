@@ -8,7 +8,6 @@ import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.Model.AccountModel;
 import fr.isencaen.api_what_time.service.Model.CreateAccountModel;
 import fr.isencaen.api_what_time.service.Model.UpdateAccountModel;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,15 @@ public class AccountController {
         return accounts.stream().map(OtherAccountDto::of).toList();
     }
 
+    @GetMapping("v1/admin-accounts/{accountId}")
+    public AccountDto getAccountById(
+            @PathVariable Integer accountId
+    ) {
+        AccountModel account = accountService.getAccountModelById(accountId);
+        if (account == null) return null;
+        return AccountDto.of(account);
+    }
+
     @GetMapping("v1/accounts/me")
     public AccountDto login() {
         AccountModel userModel = accountService.getUserModel();
@@ -38,7 +46,7 @@ public class AccountController {
 
     @PostMapping("v1/accounts")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto){
+    public AccountDto register(@RequestBody RegisterAccountDto registerAccountDto) {
         AccountModel user = accountService.createAccount(CreateAccountModel.of(registerAccountDto));
         if (user == null) return null;
         return AccountDto.of(user);
@@ -46,7 +54,7 @@ public class AccountController {
 
     @PutMapping("v1/accounts/me")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto){
+    public AccountDto update(@RequestBody UpdateAccountDto updateAccountDto) {
         AccountModel user = accountService.updateAccount(UpdateAccountModel.of(updateAccountDto));
         if (user == null) return null;
         return AccountDto.of(user);
@@ -54,7 +62,7 @@ public class AccountController {
 
     @DeleteMapping("v1/accounts/me")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto deleteMe(){
+    public AccountDto deleteMe() {
         AccountModel userDeleted = accountService.deleteAccount();
         if (userDeleted == null) return null;
         return AccountDto.of(userDeleted);
