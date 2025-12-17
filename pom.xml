@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.isencaen</groupId>
 	<artifactId>api-what-time</artifactId>
-	<version>1.0</version>
+	<version>2.0</version>
 	<name>api-what-time</name>
 	<description>Spring API pour app What Time Projet M2</description>
 	<url/>
