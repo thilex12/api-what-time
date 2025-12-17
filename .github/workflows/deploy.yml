@@ -1,14 +1,16 @@
 name: Deploy et docker
 
 on:
-  push:
-    branches: [ "main", "dev" ]
-  pull_request:
-    branches: [ "main", "dev" ]
+  workflow_run:
+    workflows: ["CI - Build & Test"]
+    types:
+      - completed
+    branches: [ "main" ]
 
 jobs:
     deploy-docker:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
         steps:
           - name: Checkout
@@ -21,11 +23,11 @@ jobs:
               java-version: "25"
               cache: maven
 
-#          - name : Clean and install dependencies
-#            run: mvn clean install -DskipTests=true
+          - name : Clean and install dependencies
+            run: mvn clean install -DskipTests=true
 
           - name: package the application
-            run: mvn package
+            run: mvn package -DskipTests
 
           - name: Extract version from pom.xml
             id: extract_version
@@ -53,3 +55,27 @@ jobs:
                 ${{ secrets.DOCKER_HUB_USERNAME }}/what-time:latest
                 ${{ secrets.DOCKER_HUB_USERNAME }}/what-time:${{ steps.extract_version.outputs.version }}
 #                ${{ secrets.DOCKER_HUB_USERNAME }}/what-time:${{ steps.extract_version.outputs.version }}-${{ steps.timestamp.outputs.timestamp }}
+
+    update-compose:
+        runs-on: ubuntu-latest
+        needs: deploy-docker
+
+        steps:
+          - name: SSH to Server and update Docker Compose
+            uses: appleboy/ssh-action@v0.1.7
+            with:
+              host: ${{ secrets.SERVER_HOST }}
+              username: ${{ secrets.SERVER_USER }}
+#              key: ${{ secrets.SERVER_SSH_KEY }}
+              password: ${{ secrets.SERVER_SSH_PASSWORD }}
+              script: |
+#                cd /path/to/your/docker-compose/directory
+#                docker compose pull
+#                docker-compose up -d
+#                Arreter le service aja
+                docker compose down aja
+                docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+                docker compose pull aja
+                docker compose up -d aja
+#                docker compose down
+#                docker compose up -d --build --force-recreate
