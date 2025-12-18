@@ -68,6 +68,17 @@ public class EventController {
         ).map(EventDto::of);
     }
 
+    @GetMapping("v1/admin-events/{id}")
+    public EventDto getAdminEventById(
+            @PathVariable int id
+    ) {
+        try {
+            return EventDto.of(eventService.getAnyEventById(id));
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Évenement non trouvé");
+        }
+    }
+
     @Operation(summary = "Retourne un évenement par son ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Évenement retourné",
