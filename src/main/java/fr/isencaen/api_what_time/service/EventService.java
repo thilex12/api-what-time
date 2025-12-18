@@ -327,4 +327,10 @@ public class EventService {
         event.getAllowedAccountsList().remove(allow);
         allowRepository.delete(allow);
     }
+
+    public EventModel getAnyEventById(int id) {
+        Event eventEntity = eventRepository.findById(id).orElseThrow();
+        EventModel event = EventModel.of(eventEntity);
+        return event;
+    }
 }
