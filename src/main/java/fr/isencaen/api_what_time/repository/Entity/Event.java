@@ -197,6 +197,11 @@ public class Event {
         isArchived = archived;
     }
 
+//    Get inscriptions
+    public List<Inscription> getInscriptions() {
+        return inscriptionsList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;

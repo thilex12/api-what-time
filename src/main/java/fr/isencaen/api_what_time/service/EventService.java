@@ -44,7 +44,7 @@ public class EventService {
 //        return EventModel.of(eventRepository.findById(id).orElseThrow());
 //    }
 
-    public Page<EventModel> getAllEvents(Pageable pageable) {
+    public Page<EventModelAdmin> getAllEvents(Pageable pageable) {
 
         int id_user;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -55,7 +55,7 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
         }
         
-        return eventRepository.findAll(pageable).map(EventModel::of);
+        return eventRepository.findAll(pageable).map(EventModelAdmin::of);
     }
 
     public Page<EventModel> getEvents(
