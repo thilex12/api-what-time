@@ -333,4 +333,59 @@ public class EventService {
         EventModel event = EventModel.of(eventEntity);
         return event;
     }
+
+    public EventModel updateAnyEvent(int id, UpdateEventAdminModel of) {
+        Event event = eventRepository.findById(id).orElseThrow();
+
+        event.setName(of.name());
+        event.setDescription(of.description());
+        event.setStartDate(of.startDate());
+        event.setEndDate(of.endDate());
+        // Correction : gestion propre de la localisation
+        if (of.locationId() != null) {
+            event.setLocation(locationRepository.findById(of.locationId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location not found")));
+        } else {
+            event.setLocation(null);
+        }
+
+        // Mise à jour des tags
+        List<TagEvent> currentTags = event.getTagsList();
+        List<Integer> newTagIds = of.tags();
+
+        if (of.tags() == null || of.tags().isEmpty()) {
+            List<TagEvent> toRemove = new ArrayList<>(currentTags);
+            for (TagEvent tagEvent : toRemove) {
+                event.getTagsList().remove(tagEvent);
+                tagEventService.deleteTagEvent(tagEvent.getId());
+            }
+        } else {
+            List<TagEvent> toRemove = new ArrayList<>();
+            for (TagEvent tagEvent : currentTags) {
+                if (!newTagIds.contains(tagEvent.getTag().getId())) {
+                    toRemove.add(tagEvent);
+                }
+            }
+            for (TagEvent tagEvent : toRemove) {
+                event.getTagsList().remove(tagEvent);
+                tagEventService.deleteTagEvent(tagEvent.getId());
+            }
+            // Ajouter les nouveaux tags qui ne sont pas déjà présents
+            List<Integer> currentTagIds = currentTags.stream()
+                    .map(tagEvent -> tagEvent.getTag().getId())
+                    .toList();
+            for (Integer tagId : newTagIds) {
+                if (!currentTagIds.contains(tagId)) {
+                    Tag tag = tagRepository.findById(tagId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag not found"));
+                    TagEvent tagEvent = new TagEvent(tag, event);
+                    tagEventService.createTagEvent(TagEventModel.of(tagEvent));
+                }
+            }
+        }
+
+        event.setVisibility(of.visibility());
+        event.setArchived(of.archived());
+        return EventModel.of(event);
+    }
 }
