@@ -20,7 +20,8 @@ public record EventDtoAdmin(
         boolean visibility,
 //        List<TagEventDto> tags
         List<Integer> tags,
-        List<InscriptionDto> inscriptions
+        List<InscriptionDto> inscriptions,
+        boolean archived
 
 ) {
     public static EventDtoAdmin of(EventModelAdmin event) {
@@ -35,7 +36,8 @@ public record EventDtoAdmin(
                 event.location() == null ? 0 : event.location().id(),
                 event.visibility(),
                 event.tags().stream().map(TagEventModel::tagId).toList(),
-                event.inscriptions().stream().map(InscriptionDto::of).toList()
+                event.inscriptions().stream().map(InscriptionDto::of).toList(),
+                event.archived()
         );
     }
 

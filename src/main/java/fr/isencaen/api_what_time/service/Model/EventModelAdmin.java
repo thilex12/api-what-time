@@ -16,7 +16,8 @@ public record EventModelAdmin(
         LocationModel location,
         boolean visibility,
         List<TagEventModel> tags,
-        List<InscriptionModel> inscriptions
+        List<InscriptionModel> inscriptions,
+        boolean archived
 
 ) {
 
@@ -32,7 +33,8 @@ public record EventModelAdmin(
                 LocationModel.of(event.getLocation()),
                 event.isVisibility(),
                 event.getTagsList().stream().map(TagEventModel::of).toList(),
-                event.getInscriptions().stream().map(InscriptionModel::of).toList()
+                event.getInscriptions().stream().map(InscriptionModel::of).toList(),
+                event.isArchived()
 //                event.getTagsList().stream().map(TagModel::of).toList()
         );
     }
