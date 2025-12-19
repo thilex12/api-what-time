@@ -1,10 +1,7 @@
 package fr.isencaen.api_what_time.controller;
 
 
-import fr.isencaen.api_what_time.controller.Dto.CreateEventDto;
-import fr.isencaen.api_what_time.controller.Dto.EventDto;
-import fr.isencaen.api_what_time.controller.Dto.EventFilterDto;
-import fr.isencaen.api_what_time.controller.Dto.UpdateEventDto;
+import fr.isencaen.api_what_time.controller.Dto.*;
 import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
@@ -58,14 +55,14 @@ public class EventController {
     }
 
     @GetMapping("v1/admin-events")
-    public Page<EventDto> getAdminEvents(
+    public Page<EventDtoAdmin> getAdminEvents(
             @ParameterObject Pageable pageable
 //            @ParameterObject EventFilterDto eventFilter
     ) {
         return eventService.getAllEvents(
                 pageable
 //                EventFilterModel.of(eventFilter)
-        ).map(EventDto::of);
+        ).map(EventDtoAdmin::of);
     }
 
     @GetMapping("v1/admin-events/{id}")
