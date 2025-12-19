@@ -58,45 +58,45 @@ public class DataLoader implements ApplicationRunner {
         tagRepository.save(tag1);
 
 
-        Event event1 = new Event();
-        event1.setName("Event 1");
-        event1.setDescription("Description for Event 1");
-        event1.setStartDate(LocalDateTime.of(2025, 11, 25, 18, 0));
-        event1.setEndDate(LocalDateTime.of(2025, 11, 25, 20, 0));
-        event1.setVisibility(false);
-        event1.setLocation(loc1);
-        event1.setId_owner(1);
-//        event1.setAllowedAccountsList(allowEvent1);
-        eventRepository.save(event1);
-
-
-        Event event2 = new Event();
-        event2.setName("Event 2");
-        event2.setDescription("Description for Event 2");
-        event2.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
-        event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
-        event2.setVisibility(false);
-        event2.setLocation(loc1);
-        event2.setId_owner(2);
-//        event2.setTags(tagRepository.findAll());
-//        event2.setAllowedAccountsList(allowRepository.findAll());
-        eventRepository.save(event2);
-
-        TagEvent tagEvent = new TagEvent(tag1, event2);
-        tagEventRepository.save(tagEvent);
-
-
-        Event event3 = new Event();
-        event3.setName("Event 3");
-        event3.setDescription("Description for Event 2");
-        event3.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
-        event3.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
-        event3.setVisibility(true);
-        event3.setLocation(loc1);
-        event3.setId_owner(1);
-        event3.setArchived(true);
-//        event3.setTags(tagRepository.findAll());
-        eventRepository.save(event3);
+//        Event event1 = new Event();
+//        event1.setName("Event 1");
+//        event1.setDescription("Description for Event 1");
+//        event1.setStartDate(LocalDateTime.of(2025, 11, 25, 18, 0));
+//        event1.setEndDate(LocalDateTime.of(2025, 11, 25, 20, 0));
+//        event1.setVisibility(false);
+//        event1.setLocation(loc1);
+//        event1.setId_owner(1);
+////        event1.setAllowedAccountsList(allowEvent1);
+//        eventRepository.save(event1);
+//
+//
+//        Event event2 = new Event();
+//        event2.setName("Event 2");
+//        event2.setDescription("Description for Event 2");
+//        event2.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
+//        event2.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
+//        event2.setVisibility(false);
+//        event2.setLocation(loc1);
+//        event2.setId_owner(2);
+////        event2.setTags(tagRepository.findAll());
+////        event2.setAllowedAccountsList(allowRepository.findAll());
+//        eventRepository.save(event2);
+//
+//        TagEvent tagEvent = new TagEvent(tag1, event2);
+//        tagEventRepository.save(tagEvent);
+//
+//
+//        Event event3 = new Event();
+//        event3.setName("Event 3");
+//        event3.setDescription("Description for Event 2");
+//        event3.setStartDate(LocalDateTime.of(2025, 12, 1, 20, 0));
+//        event3.setEndDate(LocalDateTime.of(2025, 12, 1, 22, 0));
+//        event3.setVisibility(true);
+//        event3.setLocation(loc1);
+//        event3.setId_owner(1);
+//        event3.setArchived(true);
+////        event3.setTags(tagRepository.findAll());
+//        eventRepository.save(event3);
 
 
         Account account = new Account("John", "John", "mail@gmail.com", bCryptPasswordEncoder.encode("1234"));
@@ -120,23 +120,23 @@ public class DataLoader implements ApplicationRunner {
         //accountAdmin.setTags(tagRepository.findAll());
 
 
-        Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
-        notifRepository.save(notif1);
+//        Notif notif1 = new Notif(event1, 1, LocalDateTime.now(), false, true, account);
+//        notifRepository.save(notif1);
+//
+//        Notif notif2 = new Notif(event2, 1, LocalDateTime.now(), false, false, account);
+//        notifRepository.save(notif2);
+//
+//        Notif notif3 = new Notif(event1, 2, LocalDateTime.now(), false, false, account);
+//        notifRepository.save(notif3);
+//
+//        Notif notif4 = new Notif(event2, 1, LocalDateTime.now(), false, false, account2);
+//        notifRepository.save(notif4);
+//
+//        Notif notif5 = new Notif(event3, 1, LocalDateTime.now(), false, true, account2);
+//        notifRepository.save(notif5);
 
-        Notif notif2 = new Notif(event2, 1, LocalDateTime.now(), false, false, account);
-        notifRepository.save(notif2);
-
-        Notif notif3 = new Notif(event1, 2, LocalDateTime.now(), false, false, account);
-        notifRepository.save(notif3);
-
-        Notif notif4 = new Notif(event2, 1, LocalDateTime.now(), false, false, account2);
-        notifRepository.save(notif4);
-
-        Notif notif5 = new Notif(event3, 1, LocalDateTime.now(), false, true, account2);
-        notifRepository.save(notif5);
-
-        Inscription inscription = new Inscription(account, event1);
-        inscriptionRepository.save(inscription);
+//        Inscription inscription = new Inscription(account, event1);
+//        inscriptionRepository.save(inscription);
 
 //        Inscription inscription2 = new Inscription(account, event2);
 //        inscriptionRepository.save(inscription2);
@@ -145,8 +145,8 @@ public class DataLoader implements ApplicationRunner {
 //        allowRepository.save(allow);
 
         // Ajout de user1 (account) dans la allowlist de event1
-        Allow allowEvent1 = new Allow(account, event1);
-        allowRepository.save(allowEvent1);
+//        Allow allowEvent1 = new Allow(account, event1);
+//        allowRepository.save(allowEvent1);
 
 
         Tag tag2 = new Tag("Test2");
