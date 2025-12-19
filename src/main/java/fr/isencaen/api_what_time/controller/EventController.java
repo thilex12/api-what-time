@@ -81,7 +81,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto updateAdminEvent(
             @PathVariable int id,
-            @Valid @RequestBody UpdateEventAdminDto updateEventAdminDto
+            @RequestBody UpdateEventAdminDto updateEventAdminDto
     ) {
         return EventDto.of(eventService.updateAnyEvent(id, UpdateEventAdminModel.of(updateEventAdminDto)));
     }
