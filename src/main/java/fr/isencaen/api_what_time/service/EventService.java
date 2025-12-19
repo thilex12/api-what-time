@@ -334,6 +334,7 @@ public class EventService {
         return event;
     }
 
+    @Transactional
     public EventModel updateAnyEvent(int id, UpdateEventAdminModel of) {
         Event event = eventRepository.findById(id).orElseThrow();
 
