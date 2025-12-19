@@ -6,6 +6,7 @@ import fr.isencaen.api_what_time.service.AccountService;
 import fr.isencaen.api_what_time.service.EventService;
 import fr.isencaen.api_what_time.service.Model.CreateEventModel;
 import fr.isencaen.api_what_time.service.Model.EventFilterModel;
+import fr.isencaen.api_what_time.service.Model.UpdateEventAdminModel;
 import fr.isencaen.api_what_time.service.Model.UpdateEventModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -74,6 +75,15 @@ public class EventController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Évenement non trouvé");
         }
+    }
+
+    @PutMapping("v1/admin-events/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventDto updateAdminEvent(
+            @PathVariable int id,
+            @Valid @RequestBody UpdateEventAdminDto updateEventAdminDto
+    ) {
+        return EventDto.of(eventService.updateAnyEvent(id, UpdateEventAdminModel.of(updateEventAdminDto)));
     }
 
     @Operation(summary = "Retourne un évenement par son ID")
