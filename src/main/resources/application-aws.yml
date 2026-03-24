@@ -1,11 +1,7 @@
 spring:
   application:
     name: api-what-time
-  #  datasource:
-  #    driver-class-name: org.h2.Driver
-  #    password: password
-  #    url: 'jdbc:h2:mem:whattimedb'
-  #    username: sa
+
   datasource:
     url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
     username: ${RDS_USERNAME}
